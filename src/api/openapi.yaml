@@ -1,0 +1,43 @@
+openapi: 3.0.2
+info:
+  title: Manage Items API
+  version: 0.1.0
+servers:
+- url: http://localhost:3000
+paths:
+  /items:
+    get:
+      operationId: itemsGET
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+          description: Items
+      x-eov-operation-handler: controllers/DefaultController
+components:
+  schemas:
+    inline_response_200_items:
+      example:
+        name: name
+        _id: _id
+      properties:
+        _id:
+          type: string
+        name:
+          type: string
+      type: object
+    inline_response_200:
+      example:
+        items:
+        - name: name
+          _id: _id
+        - name: name
+          _id: _id
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/inline_response_200_items'
+          type: array
+      type: object

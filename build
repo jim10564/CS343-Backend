@@ -1,0 +1,34 @@
+#!/bin/bash
+
+source build.env
+
+function build(){
+    pre-build-tests
+    generate-src
+    build-image
+}
+
+function pre-build-tests(){
+    validate-openapi
+}
+
+function validate-openapi(){
+    openapi-generator-cli validate -i openapi.yaml
+}
+
+function generate-src(){
+    openapi-generator-cli generate -i openapi.yaml -g nodejs-express-server -o src "$@"
+}
+
+function openapi-generator-cli(){
+    docker run --rm -v "${PWD}:/workdir" -w "/workdir" "${OPENAPI_GENERATOR_IMAGE}" "$@"
+}
+
+function build-image(){
+    docker build -t "${BACKEND_IMAGE}" .
+}
+
+# Run build if we were called (not sourced) from the command line.
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]] ; then
+    build
+fi
