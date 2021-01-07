@@ -18,8 +18,7 @@ class ExpressServer {
     this.app = express();
     this.openApiPath = openApiYaml;
     try {
-      this.schema = jsYaml.safeLoad(fs.readFileSync(openApiYaml));
-      this.schema.servers[0].url = config.FULL_PATH;
+      this.schema = config.SCHEMA;
     } catch (e) {
       logger.error('failed to start Express Server', e.message);
     }
@@ -51,9 +50,11 @@ class ExpressServer {
 
   launch() {
     new OpenApiValidator({
-      apiSpec: this.openApiPath,
+      apiSpec: config.SCHEMA,
       operationHandlers: path.join(__dirname),
       fileUploader: { dest: config.FILE_UPLOAD_PATH },
+      validateResponses: true,
+      validateRequests: true,
     }).install(this.app)
       .catch(e => console.log(e))
       .then(() => {

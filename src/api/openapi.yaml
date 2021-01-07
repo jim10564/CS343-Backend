@@ -19,7 +19,6 @@ paths:
           description: List items.
       tags:
       - Items
-      - New
       x-eov-operation-handler: controllers/ItemsController
 components:
   schemas:

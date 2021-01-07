@@ -41,7 +41,7 @@ function openapi-generator-cli(){
 ##########################################
 # Demo commands
 
-MONGO_NAME="${NAME}.mongo"
+MONGO_NAME="${NAME}_mongo"
 
 function start(){
     start-mongo

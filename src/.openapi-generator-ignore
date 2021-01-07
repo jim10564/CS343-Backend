@@ -22,9 +22,6 @@
 # Then explicitly reverse the ignore rule for a single file:
 #!docs/README.md
 
-# Modified config.js to take configuration from environment variables.
-# This allows us to configure the container at deploy time rather than
-# at design time.
 /config.js
 
 # Modified expressServer.js to inject the server URL into the openapi
