@@ -9,12 +9,6 @@ const listItems = () => new Promise(
   async (resolve, reject) => {
     try {
       resolve(Service.successResponse({
-        items: [
-          {
-            _id: "0123456789AbCdEf01234567",
-            name: " hi "
-          }
-        ]
       }));
     } catch (e) {
       reject(Service.rejectResponse(

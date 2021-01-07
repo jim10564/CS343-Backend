@@ -2,11 +2,12 @@
 README.md
 api/openapi.yaml
 controllers/Controller.js
+controllers/GeneratedController.js
 controllers/ItemsController.js
 controllers/index.js
 index.js
 logger.js
-services/ItemsService.js
+services/GeneratedService.js
 services/Service.js
 services/index.js
 utils/openapiRouter.js

@@ -31,3 +31,6 @@
 
 # Modified package.json to add mongodb as a dependency.
 /package.json
+
+# Prevent overwritting custom code.
+/services/ItemsService.js

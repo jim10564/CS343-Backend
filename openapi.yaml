@@ -3,15 +3,11 @@ info:
   title: "Manage Items API"
   version: "0.1.0"
 
-servers:
-  # This will be overwritten based on the values of enviornment variables passed
-  # to the container when it is ran.
-  - url: "http://localhost:10001"
-
 # Tags are not required, but are needed for OpenApiTools' openapi-generator-cli
 # to generate appropriate controller and service files.
 tags:
   - name: "Items"
+  - name: "Generated"
 
 paths:
   /items:
@@ -19,6 +15,7 @@ paths:
       operationId: listItems
       tags:
         - "Items"
+        - "Generated"
       responses:
         "200":
           description: "List items."
@@ -26,13 +23,31 @@ paths:
             application/json:
               schema:
                 type: object
+                required:
+                  - "items"
                 properties:
                   items:
+                    nullable: false
                     type: array
                     items:
                       type: object
+                      required:
+                        - "_id"
+                        - "name"
                       properties:
                         _id:
                           type: string
+                          description: "Unique identifier consisting of a 24 digit hexidecimal values (a MongoDB stingified ObjectID)"
+                          nullable: false
+                          minLength: 24
+                          maxLength: 24
+                          pattern: '^[a-zA-Z0-9]+$'
+                          example: '0123456789aBcDeF01234567'
                         name:
                           type: string
+                          description: "Name of the item."
+                          nullable: false
+                          minLength: 1
+                          maxLength: 128
+                          pattern: '\S+'
+                          example: 'Canned of tuna'
