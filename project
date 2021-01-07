@@ -1,0 +1,106 @@
+#!/bin/bash
+
+# Identify the directory containing this script.
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+# Load environment variables.
+source "${DIR}/project.env"
+
+##########################################
+# Dependency management commands
+
+function npm(){
+    docker run -it --rm  -v "${PWD}:/workdir" -w "/workdir" "${NODE_IMAGE}" npm "$@"
+}
+
+##########################################
+# Build commands
+
+function build(){
+    validate-openapi
+    generate-src
+    build-image
+}
+
+function validate-openapi(){
+    openapi-generator-cli validate -i openapi.yaml
+}
+
+function generate-src(){
+    openapi-generator-cli generate -i openapi.yaml -g nodejs-express-server -o src "$@"
+}
+
+function build-image(){
+    docker build --build-arg NODE_IMAGE="${NODE_IMAGE}" -t "${IMAGE}" .
+}
+
+function openapi-generator-cli(){
+    docker run --rm -v "${PWD}:/workdir" -w "/workdir" "${OPENAPI_GENERATOR_CLI_IMAGE}" "$@"
+}
+
+##########################################
+# Demo commands
+
+MONGO_NAME="${NAME}.mongo"
+
+function start(){
+    start-mongo
+    start-backend
+}
+
+function stop(){
+    stop-backend
+    stop-mongo
+}
+
+function restart(){
+    stop
+    start
+}
+
+function restart-backend(){
+    stop-backend
+    start-backend
+}
+
+function start-backend(){
+    docker run --detach \
+        --name "${NAME}" \
+        -p 10001:10001 \
+        -e MONGO_URI="mongodb://${MONGO_NAME}:27017" \
+        -e URL_PROTOCOL=http \
+        -e URL_SERVER=localhost \
+        -e URL_PORT=10001 \
+        -e URL_PATH= \
+        ${IMAGE}
+}
+
+function start-mongo(){
+    docker run --detach --name "${MONGO_NAME}" "${MONGO_IMAGE}"
+}
+
+function stop-backend(){
+    docker stop "${NAME}"
+    docker rm "${NAME}"
+}
+
+function stop-mongo(){
+    docker stop "${MONGO_NAME}"
+    docker rm "${MONGO_NAME}"
+}
+
+function logs(){
+    echo "================ ${MONGO_NAME} ================"
+    docker logs "${MONGO_NAME}"
+    echo "================ ${MONGO_NAME} ================"
+    echo
+    echo "================ ${NAME} ================"
+    docker logs "${NAME}"
+    echo "================ ${NAME} ================"
+}
+
+# Run build if we were called (not sourced) from the command line.
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]] ; then
+    # Run the subcommand requested... for example `./demo restart` runs restart()
+    "$@"
+fi

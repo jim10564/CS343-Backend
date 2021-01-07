@@ -1,15 +1,27 @@
-openapi: "3.0.2"
+openapi: "3.0.3"
 info:
   title: "Manage Items API"
   version: "0.1.0"
+
 servers:
-  - url: "http://localhost:3000"
+  # This will be overwritten based on the values of enviornment variables passed
+  # to the container when it is ran.
+  - url: "http://localhost:10001"
+
+# Tags are not required, but are needed for OpenApiTools' openapi-generator-cli
+# to generate appropriate controller and service files.
+tags:
+  - name: "Items"
+
 paths:
   /items:
     get:
+      operationId: listItems
+      tags:
+        - "Items"
       responses:
         "200":
-          description: "Items"
+          description: "List items."
           content:
             application/json:
               schema:

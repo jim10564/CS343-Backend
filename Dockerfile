@@ -1,10 +1,11 @@
-FROM node:14.15-alpine3.12 as installer
+ARG NODE_IMAGE
+FROM ${NODE_IMAGE} as installer
 WORKDIR /src
 COPY ./src/package.json /src
 RUN npm install
 RUN npm install mongo-cursor-pagination --save
 
-FROM node:14.15-alpine3.12
+FROM ${NODE_IMAGE}
 WORKDIR /app
 COPY --from=installer /src/node_modules /app/node_modules
 CMD [ "node", "index.js" ]

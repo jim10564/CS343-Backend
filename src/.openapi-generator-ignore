@@ -34,15 +34,3 @@
 
 # Modified package.json to add mongodb as a dependency.
 /package.json
-
-# Modified index.js to load MyService.
-/services/index.js
-
-# Modified openapiRouter.js to prove that it is not used.
-/utils/openapiRouter.js
-
-# MyServices.js implements the endpoints.
-# Start a new endpoint, or update the interface of an
-# existing endpoint, by copying generated code from
-# DefaultService.js.
-/services/MyService.js

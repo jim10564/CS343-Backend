@@ -2,9 +2,6 @@ const logger = require('../logger');
 const controllers = require('../controllers');
 const Services = require('../services');
 
-
-throw "UNUSED: If this exception is raised, then I was wrong."
-
 function handleError(err, request, response, next) {
   logger.error(err);
   const code = err.code || 400;

@@ -5,9 +5,8 @@ const Service = require('./Service');
 *
 * returns inline_response_200
 * */
-const itemsGET = () => new Promise(
+const listItems = () => new Promise(
   async (resolve, reject) => {
-    console.log("HERE");
     try {
       resolve(Service.successResponse({
       }));
@@ -21,5 +20,5 @@ const itemsGET = () => new Promise(
 );
 
 module.exports = {
-  itemsGET,
+  listItems,
 };

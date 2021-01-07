@@ -1,5 +1,7 @@
-const MyService = require('./MyService');
+const ItemsService = require('./ItemsService');
+const NewService = require('./NewService');
 
 module.exports = {
-  MyService,
+  ItemsService,
+  NewService,
 };

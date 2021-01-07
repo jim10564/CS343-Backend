@@ -1,5 +1,7 @@
-const DefaultController = require('./DefaultController');
+const ItemsController = require('./ItemsController');
+const NewController = require('./NewController');
 
 module.exports = {
-  DefaultController,
+  ItemsController,
+  NewController,
 };
