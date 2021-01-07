@@ -42,15 +42,19 @@ function openapi-generator-cli(){
 # Demo commands
 
 MONGO_NAME="${NAME}_mongo"
+NETWORK_NAME=test_network
 
 function start(){
+    create-network
     start-mongo
     start-backend
 }
 
+
 function stop(){
     stop-backend
     stop-mongo
+    delete-network
 }
 
 function restart(){
@@ -63,8 +67,13 @@ function restart-backend(){
     start-backend
 }
 
+function create-network(){
+    docker network create "${NETWORK_NAME}"
+}
+
 function start-backend(){
     docker run --detach \
+        --network test_network \
         --name "${NAME}" \
         -p 10001:10001 \
         -e MONGO_URI="mongodb://${MONGO_NAME}:27017" \
@@ -72,11 +81,16 @@ function start-backend(){
         -e URL_SERVER=localhost \
         -e URL_PORT=10001 \
         -e URL_PATH= \
-        ${IMAGE}
+        "${IMAGE}"
 }
 
 function start-mongo(){
-    docker run --detach --name "${MONGO_NAME}" "${MONGO_IMAGE}"
+    docker run \
+        --detach \
+        --network "${NETWORK_NAME}" \
+        --expose 27017 \
+        --name "${MONGO_NAME}" \
+        "${MONGO_IMAGE}"
 }
 
 function stop-backend(){
@@ -87,6 +101,10 @@ function stop-backend(){
 function stop-mongo(){
     docker stop "${MONGO_NAME}"
     docker rm "${MONGO_NAME}"
+}
+
+function delete-network(){
+    docker network rm "${NETWORK_NAME}"
 }
 
 function logs(){

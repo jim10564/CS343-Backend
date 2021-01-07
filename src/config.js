@@ -80,7 +80,7 @@ config.FULL_PATH = `${protocol}${server}${port}${url_path}${version}`;
 // so the interactive documentation works properly.
 config.SCHEMA.servers[0].url = config.FULL_PATH;
 
-console.dir(config);
+config.MONGO_URI = process.env.MONGO_URI;
 // End of CUSTOMIZATIONS ===============================================
 
 module.exports = config;
