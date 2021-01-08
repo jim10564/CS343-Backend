@@ -16,7 +16,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200'
+                $ref: '#/components/schemas/ItemArray'
           description: List items.
       tags:
       - Items
@@ -116,19 +116,3 @@ components:
       nullable: false
       pattern: \S+
       type: string
-    inline_response_200:
-      example:
-        items:
-        - name: Canned tuna
-          _id: 0123456789aBcDeF01234567
-        - name: Canned tuna
-          _id: 0123456789aBcDeF01234567
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Item'
-          nullable: false
-          type: array
-      required:
-      - items
-      type: object

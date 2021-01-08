@@ -47,7 +47,7 @@ const listItems = () => new Promise(
       for (item of items) {
         item._id = item._id.toHexString();
       }
-      resolve(Service.successResponse({ items }));
+      resolve(Service.successResponse(items));
     } catch (e) {
       logger.error(e);
       reject(Service.rejectResponse(

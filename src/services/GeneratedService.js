@@ -22,7 +22,7 @@ const createItem = ({ itemData }) => new Promise(
 );
 /**
 *
-* returns inline_response_200
+* returns List
 * */
 const listItems = () => new Promise(
   async (resolve, reject) => {
