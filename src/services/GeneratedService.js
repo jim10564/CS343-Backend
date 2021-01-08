@@ -4,7 +4,7 @@ const Service = require('./Service');
 /**
 *
 * itemData ItemData 
-* no response value expected for this operation
+* returns Item
 * */
 const createItem = ({ itemData }) => new Promise(
   async (resolve, reject) => {

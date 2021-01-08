@@ -14,14 +14,13 @@ class Controller {
     response.status(payload.code || 200);
     if (payload.code === 201) {
       response.location(payload.payload.location);
-      response.end();
+      payload = payload.payload.payload
+    }
+    const responsePayload = payload.payload !== undefined ? payload.payload : payload;
+    if (responsePayload instanceof Object) {
+      response.json(responsePayload);
     } else {
-      const responsePayload = payload.payload !== undefined ? payload.payload : payload;
-      if (responsePayload instanceof Object) {
-        response.json(responsePayload);
-      } else {
-        response.end(responsePayload);
-      }
+      response.end(responsePayload);
     }
   }
 

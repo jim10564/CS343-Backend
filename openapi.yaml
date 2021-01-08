@@ -50,6 +50,10 @@ paths:
                 type: string
                 nullable: false
                 minLength: 1
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Item"
 components:
   schemas:
     ItemData:

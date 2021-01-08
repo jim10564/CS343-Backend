@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 const logger = require("../logger");
-const { MongoClient } = require("mongodb");
+const { MongoClient, ObjectID } = require("mongodb");
 const config = require("../config");
 const Service = require('./Service');
 
@@ -14,9 +14,13 @@ const createItem = ({ itemData }) => new Promise(
     try {
       const mongoClient = new MongoClient(config.MONGO_URI, { useUnifiedTopology: true });
       await mongoClient.connect();
-      const result = await mongoClient.db("items").collection("items").insertOne(itemData);
+      const collection = mongoClient.db("items").collection("items");
+      const result = await collection.insertOne(itemData);
+      const item = await collection.findOne({_id: result.insertedId});
+      item._id = item._id.toHexString();
       const payload = {
-        location: `${config.FULL_PATH}/items/${result.insertedId}`
+        location: `${config.FULL_PATH}/items/${result.insertedId}`,
+        payload: item
       };
       const code = 201;
       resolve(Service.successResponse(payload, code));
