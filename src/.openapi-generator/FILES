@@ -1,7 +1,6 @@
 .eslintrc.json
 README.md
 api/openapi.yaml
-controllers/Controller.js
 controllers/GeneratedController.js
 controllers/ItemsController.js
 controllers/index.js

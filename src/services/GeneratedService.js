@@ -3,6 +3,25 @@ const Service = require('./Service');
 
 /**
 *
+* itemData ItemData 
+* no response value expected for this operation
+* */
+const createItem = ({ itemData }) => new Promise(
+  async (resolve, reject) => {
+    try {
+      resolve(Service.successResponse({
+        itemData,
+      }));
+    } catch (e) {
+      reject(Service.rejectResponse(
+        e.message || 'Invalid input',
+        e.status || 405,
+      ));
+    }
+  },
+);
+/**
+*
 * returns inline_response_200
 * */
 const listItems = () => new Promise(
@@ -20,5 +39,6 @@ const listItems = () => new Promise(
 );
 
 module.exports = {
+  createItem,
   listItems,
 };

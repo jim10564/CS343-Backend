@@ -22,11 +22,56 @@ paths:
       - Items
       - Generated
       x-eov-operation-handler: controllers/ItemsController
+    post:
+      operationId: createItem
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemData'
+        required: true
+      responses:
+        "201":
+          description: Created.
+          headers:
+            Location:
+              description: URI of new item.
+              explode: false
+              required: true
+              schema:
+                minLength: 1
+                nullable: false
+                type: string
+              style: simple
+      tags:
+      - Items
+      - Generated
+      x-eov-operation-handler: controllers/ItemsController
 components:
   schemas:
-    inline_response_200_items:
+    ItemData:
       example:
-        name: Canned of tuna
+        name: Canned tuna
+      properties:
+        name:
+          description: Name of the item.
+          example: Canned tuna
+          maxLength: 128
+          minLength: 1
+          nullable: false
+          pattern: \S+
+          type: string
+      required:
+      - name
+      type: object
+    ItemArray:
+      items:
+        $ref: '#/components/schemas/Item'
+      nullable: false
+      type: array
+    Item:
+      example:
+        name: Canned tuna
         _id: 0123456789aBcDeF01234567
       properties:
         _id:
@@ -40,7 +85,7 @@ components:
           type: string
         name:
           description: Name of the item.
-          example: Canned of tuna
+          example: Canned tuna
           maxLength: 128
           minLength: 1
           nullable: false
@@ -50,17 +95,34 @@ components:
       - _id
       - name
       type: object
+    Id:
+      description: Unique identifier consisting of a 24 digit hexidecimal values (a
+        MongoDB stingified ObjectID)
+      example: 0123456789aBcDeF01234567
+      maxLength: 24
+      minLength: 24
+      nullable: false
+      pattern: ^[a-zA-Z0-9]+$
+      type: string
+    ItemName:
+      description: Name of the item.
+      example: Canned tuna
+      maxLength: 128
+      minLength: 1
+      nullable: false
+      pattern: \S+
+      type: string
     inline_response_200:
       example:
         items:
-        - name: Canned of tuna
+        - name: Canned tuna
           _id: 0123456789aBcDeF01234567
-        - name: Canned of tuna
+        - name: Canned tuna
           _id: 0123456789aBcDeF01234567
       properties:
         items:
           items:
-            $ref: '#/components/schemas/inline_response_200_items'
+            $ref: '#/components/schemas/Item'
           nullable: false
           type: array
       required:

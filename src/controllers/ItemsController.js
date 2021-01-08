@@ -8,11 +8,16 @@
 
 const Controller = require('./Controller');
 const service = require('../services/ItemsService');
+const createItem = async (request, response) => {
+  await Controller.handleRequest(request, response, service.createItem);
+};
+
 const listItems = async (request, response) => {
   await Controller.handleRequest(request, response, service.listItems);
 };
 
 
 module.exports = {
+  createItem,
   listItems,
 };

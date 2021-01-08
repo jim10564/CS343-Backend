@@ -6,6 +6,31 @@ const Service = require('./Service');
 
 /**
 *
+* itemData ItemData
+* no response value expected for this operation
+* */
+const createItem = ({ itemData }) => new Promise(
+  async (resolve, reject) => {
+    try {
+      const mongoClient = new MongoClient(config.MONGO_URI, { useUnifiedTopology: true });
+      await mongoClient.connect();
+      const result = await mongoClient.db("items").collection("items").insertOne(itemData);
+      const payload = {
+        location: `${config.FULL_PATH}/items/${result.insertedId}`
+      };
+      const code = 201;
+      resolve(Service.successResponse(payload, code));
+    } catch (e) {
+      reject(Service.rejectResponse(
+        e.message || 'Invalid input',
+        e.status || 405,
+      ));
+    }
+  },
+);
+
+/**
+*
 * returns inline_response_200
 * */
 const listItems = () => new Promise(
@@ -29,6 +54,9 @@ const listItems = () => new Promise(
   },
 );
 
+
+
 module.exports = {
   listItems,
+  createItem
 };
