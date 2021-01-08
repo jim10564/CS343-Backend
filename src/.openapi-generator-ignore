@@ -23,14 +23,6 @@
 #!docs/README.md
 
 /config.js
-
-# Modified expressServer.js to inject the server URL into the openapi
-# schema based on the configuration (which is now taken from environment
-# variables).
 /expressServer.js
-
-# Modified package.json to add mongodb as a dependency.
 /package.json
-
-# Prevent overwritting custom code.
 /services/ItemsService.js
