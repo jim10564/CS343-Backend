@@ -108,10 +108,17 @@ function delete-network(){
 }
 
 function logs(){
+    mongo-logs
+    backend-logs
+}
+
+function mongo-logs(){
     echo "================ ${MONGO_NAME} ================"
     docker logs "${MONGO_NAME}"
     echo "================ ${MONGO_NAME} ================"
-    echo
+}
+
+function backend-logs(){
     echo "================ ${NAME} ================"
     docker logs "${NAME}"
     echo "================ ${NAME} ================"
