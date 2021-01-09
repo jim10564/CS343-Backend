@@ -18,7 +18,6 @@ function npm(){
 
 function build(){
     validate-openapi
-    generate-src
     build-image
 }
 
