@@ -7,7 +7,6 @@ info:
 # to generate appropriate controller and service files.
 tags:
   - name: "Items"
-  - name: "Generated"
 
 paths:
   /items:
@@ -15,7 +14,6 @@ paths:
       operationId: listItems
       tags:
         - "Items"
-        - "Generated"
       responses:
         "200":
           description: "List items."
@@ -27,7 +25,6 @@ paths:
       operationId: createItem
       tags:
         - "Items"
-        - "Generated"
       requestBody:
         required: true
         content:
