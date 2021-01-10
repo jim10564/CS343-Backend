@@ -12,6 +12,10 @@ const createItem = async (request, response) => {
   await Controller.handleRequest(request, response, service.createItem);
 };
 
+const getItem = async (request, response) => {
+  await Controller.handleRequest(request, response, service.getItem);
+};
+
 const listItems = async (request, response) => {
   await Controller.handleRequest(request, response, service.listItems);
 };
@@ -19,5 +23,6 @@ const listItems = async (request, response) => {
 
 module.exports = {
   createItem,
+  getItem,
   listItems,
 };
