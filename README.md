@@ -13,43 +13,12 @@ Prerequisites
 * Bash
 * Docker
 
-Open a Bash shell and change into the root this project
+Configuration
 
-```bash
-cd /path/to/backend
-```
+* `./project.env`
+* `./src/package.json`
 
-Bash functions for developers are in dev-bash-functions.
-View dev-bash-functions to see what functions are available and what they do.
+Build tools
 
-```bash
-less dev-bash-functions
-```
-
-Source dev-bash-functions to load the functions into your current bash environment.
-
-```bash
-source dev-bash-functions
-```
-
-Only run development functions from the root of the project.
-
-Here are a couple to get your started. Build and start the system.
-
-```bash
-up
-```
-
-Start a browser and point it to http://localhost:8080/api-docs .
-
-View the logs.
-
-```bash
-logs
-```
-
-Stop the system.
-
-```bash
-down
-```
+* `./project` - Each function in this script is a subcommand. For example `./project build` runs `function build`.
+    Read this file to learn about commands and what they do.
