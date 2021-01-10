@@ -1,0 +1,103 @@
+openapi: "3.0.3"
+info:
+  title: "Manage Items API"
+  version: "0.1.0"
+tags:
+  - name: "Items"
+paths:
+  /items:
+    get:
+      operationId: listItems
+      tags:
+        - "Items"
+      responses:
+        "200":
+          description: "List items."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ItemArray"
+    post:
+      operationId: createItem
+      tags:
+        - "Items"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/ItemData"
+      responses:
+        "201":
+          description: "Created."
+          headers:
+            Location:
+              description: "URI of new item."
+              required: true
+              schema:
+                type: string
+                nullable: false
+                minLength: 1
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Item"
+  /items/{id}:
+    get:
+      operationId: getItem
+      tags:
+        - "Items"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            "$ref": "#/components/schemas/Id"
+      responses:
+        "200":
+          description: "Item."
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Item"
+components:
+  schemas:
+    ItemData:
+      type: object
+      required:
+        - "name"
+      properties:
+        name:
+          "$ref": "#/components/schemas/ItemName"
+    ItemArray:
+      nullable: false
+      type: array
+      items:
+        "$ref": "#/components/schemas/Item"
+    Item:
+      type: object
+      required:
+        - "_id"
+        - "name"
+      properties:
+        _id:
+          "$ref":  "#/components/schemas/Id"
+        name:
+          "$ref": "#/components/schemas/ItemName"
+    Id:
+      type: string
+      description: "Unique identifier consisting of a 24 digit hexidecimal values (a MongoDB stingified ObjectID)"
+      nullable: false
+      minLength: 24
+      maxLength: 24
+      pattern: '^[a-zA-Z0-9]+$'
+      example: '0123456789aBcDeF01234567'
+    ItemName:
+      type: string
+      description: "Name of the item."
+      nullable: false
+      minLength: 1
+      maxLength: 128
+      pattern: '\S+'
+      example: 'Canned tuna'
+
