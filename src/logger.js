@@ -13,9 +13,6 @@ const logger = createLogger({
     new transports.File({ filename: 'combined.log', timestamp: true }),
   ],
 });
-// TODO: the two File transports are writing to a file. We need to mount these to
-// external to the container or the container is eventually going to crash. Or
-// we could just remove them and allow the Console transport to be the sole log.
 
 if (process.env.NODE_ENV !== 'production') {
   logger.add(new transports.Console({ format: format.simple() }));

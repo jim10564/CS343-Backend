@@ -17,7 +17,9 @@ function npm(){
 # Build commands
 
 function build(){
+    inso-export-spec
     validate-openapi
+    generate-src
     build-image
 }
 
@@ -120,6 +122,21 @@ function backend-logs(){
     echo "================ ${NAME} ================"
     docker logs "${NAME}"
     echo "================ ${NAME} ================"
+}
+
+##########################################
+# Tools
+
+function build-inso(){
+    docker build --build-arg "NODE_IMAGE=${NODE_IMAGE}" -t inso tools/inso
+}
+
+function inso(){
+    docker run -i --rm -v "$PWD:/workdir" -w "/workdir" inso inso "$@"
+}
+
+function inso-export-spec(){
+    inso export spec "Manage Items API 0.1.0" > openapi.yaml
 }
 
 # Run build if we were called (not sourced) from the command line.
