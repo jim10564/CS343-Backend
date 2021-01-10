@@ -1,0 +1,18 @@
+_id: env_75a075fb6b5c428f9d2dc6f7d9e6db14
+type: Environment
+parentId: env_7526ee670bdb15bcc61171f9fdc356399a821797
+modified: 1610205529667
+created: 1610205499065
+name: Test env
+data:
+  scheme: http
+  base_path: /v0
+  host: localhost:10001
+dataPropertyOrder:
+  "&":
+    - scheme
+    - base_path
+    - host
+color: null
+isPrivate: false
+metaSortKey: 1610205499065

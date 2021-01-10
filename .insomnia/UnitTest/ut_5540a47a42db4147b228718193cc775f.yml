@@ -1,0 +1,13 @@
+_id: ut_5540a47a42db4147b228718193cc775f
+type: UnitTest
+parentId: uts_33e23ff05a6f432e920277bceca0779b
+modified: 1610302948856
+created: 1610189201117
+requestId: req_wrk_25c13fae238c4baa876c955857d62b3d7c778083
+name: Body contains the item with an id.
+code: |-
+  const response1 = await insomnia.send();
+  const data = JSON.parse(response1.data);
+  expect(data).is.an('object');
+  expect(data._id).to.match(/[a-zA-Z0-9]{24}/);
+  expect(data.name).to.be.a("string");
