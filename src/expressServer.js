@@ -9,8 +9,13 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const { OpenApiValidator } = require('express-openapi-validator');
+
 const logger = require('./logger');
+// TODO: probably should not load logger, but should be passed logger.
+
 const config = require('./config');
+// TODO: probably should not load config but should be passed config.
+// Better yet, it should not touch config at all.
 
 class ExpressServer {
   constructor(port, openApiYaml) {
@@ -19,6 +24,7 @@ class ExpressServer {
     this.openApiPath = openApiYaml;
     try {
       this.schema = config.SCHEMA;
+      // TODO: ideally ExpressServer should not touch config directly.
     } catch (e) {
       logger.error('failed to start Express Server', e.message);
     }
@@ -51,10 +57,20 @@ class ExpressServer {
   launch() {
     new OpenApiValidator({
       apiSpec: config.SCHEMA,
+      // TODO: don't touch config.
+
       operationHandlers: path.join(__dirname),
+      // TODO: wasn't this a configuration value? This should be passed in.
+
       fileUploader: { dest: config.FILE_UPLOAD_PATH },
+      // TODO: don't touch config.
+
       validateResponses: true,
+      // TODO: should this be configurable?
+
       validateRequests: true,
+      // TODO: should this be configurable?
+
     }).install(this.app)
       .catch(e => console.log(e))
       .then(() => {
