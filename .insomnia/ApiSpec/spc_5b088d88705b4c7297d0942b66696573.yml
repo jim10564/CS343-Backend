@@ -1,7 +1,7 @@
 _id: spc_5b088d88705b4c7297d0942b66696573
 type: ApiSpec
 parentId: wrk_25c13fae238c4baa876c955857d62b3d
-modified: 1610306957617
+modified: 1610319117170
 created: 1610187008444
 fileName: Manage Items API 0.1.0
 contents: >
@@ -10,14 +10,8 @@ contents: >
   info:
     title: "Manage Items API"
     version: "0.1.0"
-
-  # Tags are not required, but are needed for OpenApiTools' openapi-generator-cli
-
-  # to generate appropriate controller and service files.
-
   tags:
     - name: "Items"
-
   paths:
     /items:
       get:
@@ -52,6 +46,24 @@ contents: >
                   type: string
                   nullable: false
                   minLength: 1
+            content:
+              application/json:
+                schema:
+                  "$ref": "#/components/schemas/Item"
+    /items/{id}:
+      get:
+        operationId: getItem
+        tags:
+          - "Items"
+        parameters:
+          - name: id
+            in: path
+            required: true
+            schema:
+              "$ref": "#/components/schemas/Id"
+        responses:
+          "200":
+            description: "Item."
             content:
               application/json:
                 schema:
