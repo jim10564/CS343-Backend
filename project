@@ -136,7 +136,7 @@ function inso(){
 }
 
 function inso-export-spec(){
-    inso export spec "Manage Items API 0.1.0" > openapi.yaml
+    inso export spec "Manage Items API" > openapi.yaml
 }
 
 # Run build if we were called (not sourced) from the command line.
