@@ -6,7 +6,6 @@ servers:
 - url: /
 tags:
 - name: Items
-- name: Generated
 paths:
   /items:
     get:
@@ -20,7 +19,6 @@ paths:
           description: List items.
       tags:
       - Items
-      - Generated
       x-eov-operation-handler: controllers/ItemsController
     post:
       operationId: createItem
@@ -49,7 +47,6 @@ paths:
               style: simple
       tags:
       - Items
-      - Generated
       x-eov-operation-handler: controllers/ItemsController
 components:
   schemas:
