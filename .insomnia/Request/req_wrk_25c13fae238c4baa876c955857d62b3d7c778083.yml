@@ -1,7 +1,7 @@
 _id: req_wrk_25c13fae238c4baa876c955857d62b3d7c778083
 type: Request
 parentId: fld_wrk_25c13fae238c4baa876c955857d62b3d44d25b5d
-modified: 1610304577193
+modified: 1610307013400
 created: 1610187128167
 url: "{{ base_url }}/items"
 name: /items
@@ -11,13 +11,13 @@ body:
   mimeType: application/json
   text: |-
     {
-    	"name": "Crackers"
+    	"name" : "candy"
     }
 parameters: []
 headers:
   - name: Content-Type
     value: application/json
-    id: pair_cbfbe486e178448998e0fec9cc8de77d
+    id: pair_6e0940ab96774b0988d148157c03e77f
 authentication: {}
 metaSortKey: -1610187128167
 isPrivate: false
