@@ -12,10 +12,6 @@ const config = {
   // The port to access this app from the host.
   HOST_BASE_URL: process.env.HOST_BASE_URL || "http://localhost:3000/",
 
-  // This is where the controllers live within the app. This is used
-  // during routing (by express-openapi-validator?).
-  CONTROLLER_DIRECTORY: path.join(__dirname, 'controllers'),
-
   // The port the server listens on.
   SERVER_PORT: process.env.SERVER_PORT || "3000",
 };
