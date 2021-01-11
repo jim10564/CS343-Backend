@@ -33,4 +33,4 @@
 /expressServer.js
 /services/ItemsService.js
 /services/Service.js
-/utils/*
+/utils/openapiRouter.js
