@@ -1,0 +1,18 @@
+_id: env_4a5c7d39f2d144ecb34cf0cd6ef1cac2
+type: Environment
+parentId: env_7526ee670bdb15bcc61171f9fdc356399a821797
+modified: 1610335166196
+created: 1610335049020
+name: Internal
+data:
+  scheme: http
+  base_path: /v0
+  host: bnm.librefoodpantry.org_inventory_items_backend:10001
+dataPropertyOrder:
+  "&":
+    - scheme
+    - base_path
+    - host
+color: null
+isPrivate: false
+metaSortKey: 1610256143540.5
