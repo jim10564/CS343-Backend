@@ -1,17 +1,19 @@
-_id: req_wrk_25c13fae238c4baa876c955857d62b3dc9a959eb
+_id: req_b0946a901b2c46beb240e4ed73a704b8
 type: Request
 parentId: fld_wrk_25c13fae238c4baa876c955857d62b3d44d25b5d
-modified: 1610401091820
-created: 1610187128437
-url: "{{ base_url }}/items"
-name: /items
+modified: 1610401750753
+created: 1610401313730
+url: "{{ base_url }}/items/{% response 'body',
+  'req_wrk_25c13fae238c4baa876c955857d62b3d7c778083', 'b64::JC5faWQ=::46b',
+  'never', 60 %}"
+name: /items/{_id}
 description: ""
 method: GET
 body: {}
 parameters: []
 headers: []
 authentication: {}
-metaSortKey: -1610187128437
+metaSortKey: -1610187128487
 isPrivate: false
 settingStoreCookies: true
 settingSendCookies: true
