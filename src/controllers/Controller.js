@@ -5,34 +5,6 @@ const config = require('../config');
 const logger = require('../logger');
 
 class Controller {
-  static sendResponse(response, payload) {
-    /**
-    * The default response-code is 200. We want to allow to change that. in That case,
-    * payload will be an object consisting of a code and a payload. If not customized
-    * send 200 and the payload as received in this method.
-    */
-    response.status(payload.code || 200);
-    if (payload.code === 201) {
-      response.location(payload.payload.location);
-      payload = payload.payload.payload
-    }
-    const responsePayload = payload.payload !== undefined ? payload.payload : payload;
-    if (responsePayload instanceof Object) {
-      response.json(responsePayload);
-    } else {
-      response.end(responsePayload);
-    }
-  }
-
-  static sendError(response, error) {
-    response.status(error.code || 500);
-    if (error.error instanceof Object) {
-      response.json(error.error);
-    } else {
-      response.end(error.error || error.message);
-    }
-  }
-
   /**
   * Files have been uploaded to the directory defined by config.js as upload directory
   * Files have a temporary name, that was saved as 'filename' of the file object that is
@@ -107,10 +79,11 @@ class Controller {
 
   static async handleRequest(request, response, serviceOperation) {
     try {
-      const serviceResponse = await serviceOperation(this.collectRequestParams(request));
-      Controller.sendResponse(response, serviceResponse);
-    } catch (error) {
-      Controller.sendError(response, error);
+      return await serviceOperation(this.collectRequestParams(request));
+    } catch (e) {
+      e.status = e.status || 400;
+      e.error = e.error || "Invalid input";
+      response.status(e.status).json(e);
     }
   }
 }

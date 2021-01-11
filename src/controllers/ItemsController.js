@@ -1,25 +1,30 @@
-/**
- * The ItemsController file is a very simple one, which does not need to be changed manually,
- * unless there's a case where business logic reoutes the request to an entity which is not
- * the service.
- * The heavy lifting of the Controller item is done in Request.js - that is where request
- * parameters are extracted and sent to the service, and where response is handled.
- */
-
 const Controller = require('./Controller');
 const service = require('../services/ItemsService');
-const createItem = async (request, response) => {
-  await Controller.handleRequest(request, response, service.createItem);
-};
+
+async function createItem(request, response) {
+  try {
+    const item = await Controller.handleRequest(request, response, service.createItem);
+    response
+      .status(201)
+      .location(`${request.originalUrl}/${item._id}`)
+      .json(item);
+    } catch (e) {
+      response.status(e.status).json(e);
+    }
+  };
 
 const getItem = async (request, response) => {
   await Controller.handleRequest(request, response, service.getItem);
 };
 
-const listItems = async (request, response) => {
-  await Controller.handleRequest(request, response, service.listItems);
+async function listItems(request, response) {
+  try {
+    const items = await Controller.handleRequest(request, response, service.listItems);
+    response.status(200).json(items);
+  } catch (e) {
+    response.status(e.status).json(e);
+  }
 };
-
 
 module.exports = {
   createItem,

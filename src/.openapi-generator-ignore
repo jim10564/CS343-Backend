@@ -29,6 +29,8 @@
 
 /access-objects/*
 /controllers/Controller.js
+/controllers/ItemsController.js
 /expressServer.js
 /services/ItemsService.js
+/services/Service.js
 /utils/*

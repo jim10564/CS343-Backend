@@ -23,13 +23,21 @@ class ItemsAccessObject {
     }
 
     static async create(itemData) {
-      const mongoClient = new MongoClient(config.MONGO_URI, { useUnifiedTopology: true });
-      await mongoClient.connect();
-      const collection = mongoClient.db("items").collection("items");
-      const result = await collection.insertOne(itemData);
-      const item = await collection.findOne({_id: result.insertedId});
-      item._id = item._id.toHexString();
-      return item;
+      try {
+        const mongoClient = new MongoClient(config.MONGO_URI, { useUnifiedTopology: true });
+        await mongoClient.connect();
+        const collection = mongoClient.db("items").collection("items");
+        const result = await collection.insertOne(itemData);
+        const item = await collection.findOne({_id: result.insertedId});
+        item._id = item._id.toHexString();
+        return item;
+      } catch (e) {
+        throw {
+          status: 500,
+          error: "Internal Server Error",
+          caused_by: e
+        };
+      }
     }
 }
 
