@@ -22,10 +22,12 @@
 # Then explicitly reverse the ignore rule for a single file:
 #!docs/README.md
 
-/access-objects/*
 /config.js
 /index.js
+/logger.js
+/package.json
+
+/access-objects/*
 /controllers/Controller.js
 /expressServer.js
-/package.json
 /services/ItemsService.js

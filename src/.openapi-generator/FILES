@@ -3,7 +3,6 @@ README.md
 api/openapi.yaml
 controllers/ItemsController.js
 controllers/index.js
-logger.js
 services/Service.js
 services/index.js
 utils/openapiRouter.js
