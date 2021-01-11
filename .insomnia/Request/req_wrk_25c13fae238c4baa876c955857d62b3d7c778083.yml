@@ -1,7 +1,7 @@
 _id: req_wrk_25c13fae238c4baa876c955857d62b3d7c778083
 type: Request
 parentId: fld_wrk_25c13fae238c4baa876c955857d62b3d44d25b5d
-modified: 1610407252613
+modified: 1610407748454
 created: 1610187128167
 url: "{{ base_url }}/items"
 name: /items
@@ -9,12 +9,12 @@ description: ""
 method: POST
 body:
   mimeType: application/json
-  text: '{"name":"soup"}'
+  text: '{"name": "soup"}'
 parameters: []
 headers:
   - name: Content-Type
     value: application/json
-    id: pair_b19bdc6ae257468ca033111546237404
+    id: pair_9b099596a48d4d3e94cac7011a45772c
 authentication: {}
 metaSortKey: -1610187128167
 isPrivate: false
