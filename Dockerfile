@@ -3,7 +3,6 @@ FROM ${NODE_IMAGE} as installer
 WORKDIR /src
 COPY ./src/package.json /src
 RUN npm install
-RUN npm install mongo-cursor-pagination --save
 
 FROM ${NODE_IMAGE}
 WORKDIR /app
