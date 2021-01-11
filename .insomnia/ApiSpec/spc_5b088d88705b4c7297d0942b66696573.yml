@@ -1,7 +1,7 @@
 _id: spc_5b088d88705b4c7297d0942b66696573
 type: ApiSpec
 parentId: wrk_25c13fae238c4baa876c955857d62b3d
-modified: 1610402779598
+modified: 1610407150843
 created: 1610187008444
 fileName: ManageItems
 contents: >
@@ -35,6 +35,13 @@ contents: >
             application/json:
               schema:
                 "$ref": "#/components/schemas/ItemData"
+              examples:
+                soup:
+                  value: { "name" : "Soup" }
+                tuna:
+                  value: { "name" : "Tuna" }
+                bread:
+                  value: { "name" : "Bread" }
         responses:
           "201":
             description: "Created."
