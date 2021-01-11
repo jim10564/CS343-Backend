@@ -100,4 +100,3 @@ components:
       maxLength: 128
       pattern: '\S+'
       example: 'Canned tuna'
-
