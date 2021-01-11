@@ -132,7 +132,7 @@ function build-inso(){
 }
 
 function inso(){
-    docker run -i --rm -v "$PWD:/workdir" -w "/workdir" inso inso "$@"
+    docker run -i --rm --network "${NETWORK_NAME}" -v "$PWD:/workdir" -w "/workdir" inso inso "$@"
 }
 
 function inso-export-spec(){
