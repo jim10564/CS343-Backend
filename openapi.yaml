@@ -1,4 +1,3 @@
-# ONLY EDIT WITHIN INSOMNIA-DESIGNER
 openapi: "3.0.3"
 info:
   title: "Manage Items API"
