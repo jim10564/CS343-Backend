@@ -8,26 +8,57 @@
 
 ## Developer Quickstart
 
-### Prerequisites
+Prerequisites
 
 * Bash
 * Docker
 
+Setup the development environment.
+Run this when you first sit down to work on the project.
+
+```bash
+./dev setup
+```
+
+Build, run, and test everything in the development environment.
+Run this after each change to test your change before committing.
+
+```bash
+./dev cycle
+```
+
+Tear down the development environment. Run this when you are
+done for the day and you don't want to leave containers running.
+
+```bash
+./dev teardown
+```
+
+`./dev` contains many subcommands that are used to implement the
+subcommands above. To discover these subcommands, read the contents
+of `./dev`. Any function defined in `./dev` can be ran as a subcommand.
+For example, if their is a function named `foo`, you can run it like so
+`./dev foo`.
+
 ### Configuration
 
-* `/project.env`
+To upgrade versions of the project or its dependencies, modify the following files.
+If you add a new dependency, be sure that it only needs Docker to run and its
+version can be controlled through the following files.
+
+* `/dev.env`
 * `/src/package.json`
 
-### Scripts
+### /dev
 
-`/project` contains a number of bash functions that are useful during development.
-Each function can be executed as a subcommand of `/project`. For example,
-if there is a function named `build`, then you can execute it like `./project build`.
+`/dev` contains a number of bash functions that are useful during development.
+Each function can be executed as a subcommand of `/dev`. For example,
+if there is a function named `build`, then you can execute it like `./dev build`.
 
-### Build
+#### ./dev
 
 ```
-./project build
+./dev build
 ```
 
 ### Run automated tests
@@ -35,7 +66,7 @@ if there is a function named `build`, then you can execute it like `./project bu
 After building...
 
 ```
-./project run-tests
+./dev run-tests
 ```
 
 ### Manual testing
@@ -43,7 +74,7 @@ After building...
 After building, run the server...
 
 ```
-./project start
+./dev start
 ```
 
 Open browser to `http://localhost:10001/api-docs` to view interactive documentation.
@@ -51,13 +82,13 @@ Open browser to `http://localhost:10001/api-docs` to view interactive documentat
 View the logs...
 
 ```
-./project logs
+./dev logs
 ```
 
 Stop the server...
 
 ```
-./project stop
+./dev stop
 ```
 
 ### OpenApi and Insomnia
@@ -65,7 +96,7 @@ Stop the server...
 We use OpenApi to specify our REST API.
 The official source of the specification is stored in `/.insomnia`.
 Only use Insomnia-Designer to edit these files.
-The build scripts (`./project build`) use Insomnia Inso to export
+The build scripts (`./dev build`) use Insomnia Inso to export
 the specification to `/openapi.yaml` and openapi-generator-cli to generate
 files in `/src/` including `/src/api/openapi.yaml` (which is not exactly the
 same as `/openapi.yaml`).
@@ -86,4 +117,4 @@ how to deal with merge conflicts; so avoid them like the plague.
 
 We also use Insomnia-Designer to design unit tests for the API.
 These can be ran from either within Insomnia-Designer or from
-the command-line using Inso (e.g., `./project inso run test`).
+the command-line using Inso (e.g., `./dev inso run test`).

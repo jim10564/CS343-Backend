@@ -1,0 +1,281 @@
+#!/bin/bash
+
+# -e: Exit on first error.
+# -u: Reading an undefined variable is an error.
+set -eu
+
+# Identify the directory containing this script.
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+# Load environment variables.
+source "${DIR}/dev.env"
+
+function setup(){
+    build-development-tools
+    start-development-environment
+}
+
+function cycle(){
+    stop
+    build
+    start
+    test-with-inso
+}
+
+function teardown(){
+    stop-development-environment
+}
+
+##########################################
+# Development Tools
+
+function build-development-tools(){
+    build-inso-image
+}
+
+function build-inso-image(){
+    echo
+    echo "Building inso image"
+    docker build --build-arg "NODE_IMAGE=${NODE_IMAGE}" --build-arg "INSO_NPM_PACKAGE=${INSO_NPM_PACKAGE}" -t inso tools/inso
+    echo "inso image built."
+    echo
+}
+
+function inso(){
+    if docker network ls | grep " ${NETWORK_NAME} " > /dev/null
+    then
+        docker run -i --rm --network "${NETWORK_NAME}" -v "$PWD:/workdir" -w "/workdir" inso inso "$@"
+    else
+        docker run -i --rm --v "$PWD:/workdir" -w "/workdir" inso inso "$@"
+    fi
+}
+
+function npm(){
+    docker run -it --rm  -v "${PWD}:/workdir" -w "/workdir" "${NODE_IMAGE}" npm "$@"
+}
+
+function openapi-generator-cli(){
+    docker run --rm -v "${PWD}:/workdir" -w "/workdir" "${OPENAPI_GENERATOR_CLI_IMAGE}" "$@"
+}
+
+
+##########################################
+# Build commands
+
+function build(){
+    inso-export-spec
+    validate-spec-with-openapi-generator-cli
+    generate-src
+    build-image
+}
+
+function validate-spec-with-openapi-generator-cli(){
+    echo
+    echo "Validating openapi.yaml"
+    openapi-generator-cli validate -i openapi.yaml
+    echo "openapi.yaml validated."
+    echo
+}
+
+function generate-src(){
+    echo
+    echo "Generating src from openapi.yaml using openapi-generator-cli..."
+    openapi-generator-cli generate -i openapi.yaml -g nodejs-express-server -o src "$@"
+    echo "openapi.yaml generated."
+    echo
+}
+
+function build-image(){
+    echo
+    echo "Building docker image ${IMAGE}"
+    docker build --build-arg NODE_IMAGE="${NODE_IMAGE}" -t "${IMAGE}" .
+    echo "Docker image ${IMAGE} built."
+    echo
+}
+
+
+##########################################
+# Development Environment
+
+function start-development-environment(){
+    create-docker-network "${NETWORK_NAME}"
+}
+
+function stop-development-environment(){
+    echo
+    echo "Stopping all containers on network ${NETWORK_NAME}"
+    if docker ps -q -f network="${NETWORK_NAME}" | grep . > /dev/null
+    then
+        docker stop $(docker ps -q -f network="${NETWORK_NAME}")
+        echo "Containers on ${NETWORK_NAME} have been stopped."
+    else
+        echo "No containers on ${NETWORK_NAME} found."
+    fi
+    echo
+
+    echo
+    echo "Removing all containers on network ${NETWORK_NAME}"
+    if docker ps -aq -f network="${NETWORK_NAME}" | grep . > /dev/null
+    then
+        docker rm $(docker ps -aq -f network="${NETWORK_NAME}")
+        echo "All container on ${NETWORK_NAME} removed."
+    else
+        echo "No containers on ${NETWORK_NAME} found."
+    fi
+    echo
+
+    remove-docker-network "${NETWORK_NAME}"
+}
+
+function create-docker-network(){
+    echo "Creating docker network ${1}"
+    if docker network ls | grep -E " ${1} " > /dev/null
+    then
+        echo "${1} exists"
+    else
+        docker network create "${1}"
+        echo "${1} created."
+    fi
+    echo
+}
+
+function remove-docker-network(){
+    echo
+    echo "Removing docker network ${1}"
+    if docker network ls | grep " ${1} " ; then
+        docker network rm "${1}"
+        echo "${1} removed."
+    else
+        echo "${1} does not exist."
+    fi
+    echo
+}
+
+##########################################
+# Demo commands
+
+MONGO_NAME="${NAME}_mongo"
+NETWORK_NAME=test_network
+
+function start(){
+    start-mongo
+    start-backend
+}
+
+function stop(){
+    stop-and-remove-docker-container "${NAME}"
+    stop-and-remove-docker-container "${MONGO_NAME}"
+}
+
+function restart(){
+    stop
+    start
+}
+
+function restart-backend(){
+    stop-backend
+    start-backend
+}
+
+
+function start-backend(){
+    echo
+    echo "Starting ${NAME}"
+    docker run --detach \
+        --network test_network \
+        --name "${NAME}" \
+        -p 10001:10001 \
+        -e MONGO_URI="mongodb://${MONGO_NAME}:27017" \
+        -e URL_PROTOCOL=http \
+        -e URL_SERVER=localhost \
+        -e URL_PORT=10001 \
+        -e URL_PATH= \
+        "${IMAGE}"
+    echo "${NAME} started."
+    echo
+}
+
+function start-mongo(){
+    echo
+    echo "Starting ${MONGO_NAME}"
+    docker run \
+        --detach \
+        --network "${NETWORK_NAME}" \
+        --expose 27017 \
+        --name "${MONGO_NAME}" \
+        "${MONGO_IMAGE}"
+    echo "${MONGO_NAME} started."
+    echo
+}
+
+function stop-and-remove-docker-container(){
+    stop-docker-container "${1}"
+    remove-docker-container "${1}"
+}
+function stop-docker-container(){
+    echo
+    echo "Stopping ${1}"
+    if docker ps | grep "${1}"
+    then
+        docker stop "${1}"
+        echo "${1} stopped."
+    else
+        echo "${1} is not running."
+    fi
+    echo
+}
+function remove-docker-container(){
+    echo
+    echo "Removing ${1}"
+    if docker ps -a | grep "${1}"
+    then
+        docker rm "${1}"
+        echo "${1} removed."
+    else
+        echo "${1} does not exist."
+    fi
+    echo
+}
+
+
+function logs(){
+    mongo-logs
+    backend-logs
+}
+
+function mongo-logs(){
+    echo "================ ${MONGO_NAME} ================"
+    docker logs "${MONGO_NAME}"
+    echo "================ ${MONGO_NAME} ================"
+}
+
+function backend-logs(){
+    echo "================ ${NAME} ================"
+    docker logs "${NAME}"
+    echo "================ ${NAME} ================"
+}
+
+##########################################
+# Tools
+
+function inso-export-spec(){
+    echo
+    echo "Exporting spec..."
+    inso export spec "ManageItems" -o openapi.yaml
+    echo "Speci exported."
+    echo
+}
+
+function test-with-inso(){
+    echo
+    echo "Running unit tests with inso"
+    inso run test -e Internal ManageItems
+    echo "Tests ran."
+    echo
+}
+
+# Run build if we were called (not sourced) from the command line.
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]] ; then
+    # Run the subcommand requested... for example `./demo restart` runs restart()
+    "$@"
+fi
