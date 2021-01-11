@@ -1,13 +1,13 @@
 _id: env_4a5c7d39f2d144ecb34cf0cd6ef1cac2
 type: Environment
 parentId: env_7526ee670bdb15bcc61171f9fdc356399a821797
-modified: 1610335166196
+modified: 1610392913066
 created: 1610335049020
 name: Internal
 data:
   scheme: http
   base_path: /v0
-  host: bnm.librefoodpantry.org_inventory_items_backend:10001
+  host: bnm.librefoodpantry.org_inventory_items_backend:3000
 dataPropertyOrder:
   "&":
     - scheme
