@@ -184,12 +184,9 @@ function start-backend(){
     docker run --detach \
         --network test_network \
         --name "${NAME}" \
-        -p 10001:10001 \
+        -p 10001:3000 \
+        -e HOST_BASE_URL="http://localhost:10001/v0" \
         -e MONGO_URI="mongodb://${MONGO_NAME}:27017" \
-        -e URL_PROTOCOL=http \
-        -e URL_SERVER=localhost \
-        -e URL_PORT=10001 \
-        -e URL_PATH= \
         "${IMAGE}"
     echo "${NAME} started."
     echo

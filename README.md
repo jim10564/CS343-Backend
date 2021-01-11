@@ -1,10 +1,7 @@
 ## Environment Variables
 
 * MONGO_URI - The MongoDB connection string.
-* URL_PROTOCOL
-* URL_SERVER
-* URL_PORT
-* URL_PATH
+* HOST_BASE_URL - The URL used to access the service from outside the Docker environment.
 
 ## Developer Quickstart
 
@@ -37,8 +34,10 @@ done for the day and you don't want to leave containers running.
 `./dev` contains many subcommands that are used to implement the
 subcommands above. To discover these subcommands, read the contents
 of `./dev`. Any function defined in `./dev` can be ran as a subcommand.
-For example, if their is a function named `foo`, you can run it like so
-`./dev foo`.
+For example, there is a function named `logs`, you can run it like so
+`./dev logs` to display the logs of the running images.
+
+
 
 ### Configuration
 

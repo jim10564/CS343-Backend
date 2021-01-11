@@ -24,6 +24,7 @@
 
 /access-objects/*
 /config.js
+/index.js
 /controllers/Controller.js
 /expressServer.js
 /package.json
