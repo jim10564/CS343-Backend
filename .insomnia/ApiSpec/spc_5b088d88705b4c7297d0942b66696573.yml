@@ -1,12 +1,10 @@
 _id: spc_5b088d88705b4c7297d0942b66696573
 type: ApiSpec
 parentId: wrk_25c13fae238c4baa876c955857d62b3d
-modified: 1610320311717
+modified: 1610334589284
 created: 1610187008444
 fileName: Manage Items API
 contents: >
-  # ONLY EDIT WITHIN INSOMNIA-DESIGNER
-
   openapi: "3.0.3"
 
   info:
