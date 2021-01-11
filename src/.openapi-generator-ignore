@@ -31,3 +31,4 @@
 /controllers/Controller.js
 /expressServer.js
 /services/ItemsService.js
+/utils/*
