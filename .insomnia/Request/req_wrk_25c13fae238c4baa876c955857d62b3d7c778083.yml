@@ -9,7 +9,7 @@ description: ""
 method: POST
 body:
   mimeType: application/json
-  text: ' {"name": "Soup"}'
+  text: '{"name": "Soup"}'
 parameters: []
 headers:
   - name: Content-Type

@@ -17,8 +17,8 @@ function npm(){
 # Build commands
 
 function build(){
-    inso-export-spec
     validate-openapi
+    inso-export-spec
     generate-src
     build-image
 }
@@ -37,6 +37,12 @@ function build-image(){
 
 function openapi-generator-cli(){
     docker run --rm -v "${PWD}:/workdir" -w "/workdir" "${OPENAPI_GENERATOR_CLI_IMAGE}" "$@"
+}
+
+function run-tests(){
+    start
+    test-with-inso
+    stop
 }
 
 ##########################################
@@ -132,11 +138,16 @@ function build-inso(){
 }
 
 function inso(){
+    create-network || true
     docker run -i --rm --network "${NETWORK_NAME}" -v "$PWD:/workdir" -w "/workdir" inso inso "$@"
 }
 
 function inso-export-spec(){
-    inso export spec "Manage Items API" > openapi.yaml
+    inso export spec "ManageItems" > openapi.yaml
+}
+
+function test-with-inso(){
+    inso run test -e Internal ManageItems
 }
 
 # Run build if we were called (not sourced) from the command line.
