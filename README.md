@@ -30,11 +30,17 @@ if there is a function named `build`, then you can execute it like `./project bu
 ./project build
 ```
 
+### Run automated tests
+
+After building...
+
+```
+./project run-tests
+```
+
 ### Manual testing
 
-Build as described above.
-
-Run the server:
+After building, run the server...
 
 ```
 ./project start
@@ -42,13 +48,13 @@ Run the server:
 
 Open browser to `http://localhost:10001/api-docs` to view interactive documentation.
 
-View logs:
+View the logs...
 
 ```
 ./project logs
 ```
 
-Stop the server:
+Stop the server...
 
 ```
 ./project stop
