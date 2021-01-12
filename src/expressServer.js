@@ -39,8 +39,8 @@ class ExpressServer {
     new OpenApiValidator({
       apiSpec: this.schema,
       operationHandlers: __dirname,
-      validateResponses: true,
-      validateRequests: true,
+      validateResponses: false,
+      validateRequests: false,
     }).install(this.app)
       .catch(e => console.log(e))
       .then(() => {

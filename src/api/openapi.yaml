@@ -25,6 +25,16 @@ paths:
       requestBody:
         content:
           application/json:
+            examples:
+              soup:
+                value:
+                  name: Soup
+              tuna:
+                value:
+                  name: Tuna
+              bread:
+                value:
+                  name: Bread
             schema:
               $ref: '#/components/schemas/ItemData'
         required: true
@@ -48,13 +58,13 @@ paths:
       tags:
       - Items
       x-eov-operation-handler: controllers/ItemsController
-  /items/{id}:
+  /items/{_id}:
     get:
       operationId: getItem
       parameters:
       - explode: false
         in: path
-        name: id
+        name: _id
         required: true
         schema:
           $ref: '#/components/schemas/Id'
@@ -66,11 +76,29 @@ paths:
               schema:
                 $ref: '#/components/schemas/Item'
           description: Item.
+        "404":
+          description: Item not found.
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: unexpected error
       tags:
       - Items
       x-eov-operation-handler: controllers/ItemsController
 components:
   schemas:
+    Error:
+      properties:
+        code:
+          format: int32
+          type: integer
+        message:
+          type: string
+      required:
+      - code
+      - message
     ItemData:
       example:
         name: Canned tuna

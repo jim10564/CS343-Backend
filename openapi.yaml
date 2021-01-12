@@ -27,6 +27,13 @@ paths:
           application/json:
             schema:
               "$ref": "#/components/schemas/ItemData"
+            examples:
+              soup:
+                value: { "name" : "Soup" }
+              tuna:
+                value: { "name" : "Tuna" }
+              bread:
+                value: { "name" : "Bread" }
       responses:
         "201":
           description: "Created."
@@ -42,13 +49,13 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Item"
-  /items/{id}:
+  /items/{_id}:
     get:
       operationId: getItem
       tags:
         - "Items"
       parameters:
-        - name: id
+        - name: _id
           in: path
           required: true
           schema:
@@ -60,8 +67,26 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Item"
+        "404":
+          description: "Item not found."
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
     ItemData:
       type: object
       required:

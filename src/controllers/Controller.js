@@ -81,9 +81,10 @@ class Controller {
     try {
       return await serviceOperation(this.collectRequestParams(request));
     } catch (e) {
+      logger.error(e);
       e.status = e.status || 400;
       e.error = e.error || "Invalid input";
-      response.status(e.status).json(e);
+      throw e;
     }
   }
 }

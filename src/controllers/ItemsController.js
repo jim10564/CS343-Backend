@@ -8,13 +8,19 @@ async function createItem(request, response) {
       .status(201)
       .location(`${request.originalUrl}/${item._id}`)
       .json(item);
-    } catch (e) {
-      response.status(e.status).json(e);
-    }
-  };
+  } catch (e) {
+    response.status(e.status).json(e);
+  }
+};
 
-const getItem = async (request, response) => {
-  await Controller.handleRequest(request, response, service.getItem);
+async function getItem(request, response) {
+  try {
+    logger.info(`ItemsController.getItem() called`);
+    const item = await Controller.handleRequest(request, response, service.getItem);
+    response.status(200).json(item);
+  } catch (e) {
+    response.status(e.status).json(e);
+  }
 };
 
 async function listItems(request, response) {
