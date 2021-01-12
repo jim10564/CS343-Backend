@@ -1,136 +1,177 @@
 _id: spc_5b088d88705b4c7297d0942b66696573
 type: ApiSpec
 parentId: wrk_25c13fae238c4baa876c955857d62b3d
-modified: 1610407714864
+modified: 1610482629407
 created: 1610187008444
 fileName: ManageItems
 contents: >
-  openapi: "3.0.3"
+  openapi: 3.0.3
 
   info:
-    title: "Manage Items API"
-    version: "0.1.0"
+    title: ManageItems
+    version: 0.1.0
+  servers:
+
+  - url: /
+
   tags:
-    - name: "Items"
+
+  - name: Items
+
   paths:
     /items:
       get:
+        x-eov-operation-handler: endpoints
         operationId: listItems
-        tags:
-          - "Items"
         responses:
           "200":
-            description: "List items."
             content:
               application/json:
                 schema:
-                  "$ref": "#/components/schemas/ItemArray"
-      post:
-        operationId: createItem
+                  $ref: '#/components/schemas/ItemArray'
+            description: List items.
         tags:
-          - "Items"
+        - Items
+      post:
+        x-eov-operation-handler: endpoints
+        operationId: createItem
         requestBody:
-          required: true
           content:
             application/json:
-              schema:
-                "$ref": "#/components/schemas/ItemData"
               examples:
                 soup:
-                  value: { "name" : "Soup" }
+                  value:
+                    name: Soup
                 tuna:
-                  value: { "name" : "Tuna" }
+                  value:
+                    name: Tuna
                 bread:
-                  value: { "name" : "Bread" }
+                  value:
+                    name: Bread
+              schema:
+                $ref: '#/components/schemas/ItemData'
+          required: true
         responses:
           "201":
-            description: "Created."
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Item'
+            description: Created.
             headers:
               Location:
-                description: "URI of new item."
+                description: URI of new item.
+                explode: false
                 required: true
                 schema:
-                  type: string
-                  nullable: false
                   minLength: 1
-            content:
-              application/json:
-                schema:
-                  "$ref": "#/components/schemas/Item"
-    /items/{_id}:
-      get:
-        operationId: getItem
+                  nullable: false
+                  type: string
+                style: simple
         tags:
-          - "Items"
-        parameters:
-          - name: _id
-            in: path
-            required: true
-            schema:
-              "$ref": "#/components/schemas/Id"
-        responses:
-          "200":
-            description: "Item."
-            content:
-              application/json:
-                schema:
-                  "$ref": "#/components/schemas/Item"
-          "404":
-            description: "Item not found."
-          default:
-            description: unexpected error
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/Error'
+        - Items
+    # /items/{_id}:
+    #   get:
+    #     x-eov-operation-handler: routes/endpoints
+    #     operationId: getItem
+    #     parameters:
+    #     - explode: false
+    #       in: path
+    #       name: _id
+    #       required: true
+    #       schema:
+    #         $ref: '#/components/schemas/Id'
+    #       style: simple
+    #     responses:
+    #       "200":
+    #         content:
+    #           application/json:
+    #             schema:
+    #               $ref: '#/components/schemas/Item'
+    #         description: Item.
+    #       "404":
+    #         description: Item not found.
+    #       default:
+    #         content:
+    #           application/json:
+    #             schema:
+    #               $ref: '#/components/schemas/Error'
+    #         description: unexpected error
+    #     tags:
+    #     - Items
   components:
     schemas:
       Error:
-        required:
-          - code
-          - message
         properties:
           code:
-            type: integer
             format: int32
+            type: integer
           message:
             type: string
-      ItemData:
-        type: object
         required:
-          - "name"
+        - code
+        - message
+      ItemData:
+        example:
+          name: Canned tuna
         properties:
           name:
-            "$ref": "#/components/schemas/ItemName"
+            description: Name of the item.
+            example: Canned tuna
+            maxLength: 128
+            minLength: 1
+            nullable: false
+            pattern: \S+
+            type: string
+        required:
+        - name
+        type: object
       ItemArray:
+        items:
+          $ref: '#/components/schemas/Item'
         nullable: false
         type: array
-        items:
-          "$ref": "#/components/schemas/Item"
       Item:
-        type: object
-        required:
-          - "_id"
-          - "name"
+        example:
+          name: Canned tuna
+          _id: 0123456789aBcDeF01234567
         properties:
           _id:
-            "$ref":  "#/components/schemas/Id"
+            description: Unique identifier consisting of a 24 digit hexidecimal values
+              (a MongoDB stingified ObjectID)
+            example: 0123456789aBcDeF01234567
+            maxLength: 24
+            minLength: 24
+            nullable: false
+            pattern: ^[a-zA-Z0-9]+$
+            type: string
           name:
-            "$ref": "#/components/schemas/ItemName"
+            description: Name of the item.
+            example: Canned tuna
+            maxLength: 128
+            minLength: 1
+            nullable: false
+            pattern: \S+
+            type: string
+        required:
+        - _id
+        - name
+        type: object
       Id:
-        type: string
-        description: "Unique identifier consisting of a 24 digit hexidecimal values (a MongoDB stingified ObjectID)"
-        nullable: false
-        minLength: 24
+        description: Unique identifier consisting of a 24 digit hexidecimal values (a
+          MongoDB stingified ObjectID)
+        example: 0123456789aBcDeF01234567
         maxLength: 24
-        pattern: '^[a-zA-Z0-9]+$'
-        example: '0123456789aBcDeF01234567'
-      ItemName:
-        type: string
-        description: "Name of the item."
+        minLength: 24
         nullable: false
-        minLength: 1
+        pattern: ^[a-zA-Z0-9]+$
+        type: string
+      ItemName:
+        description: Name of the item.
+        example: Canned tuna
         maxLength: 128
-        pattern: '\S+'
-        example: 'Canned tuna'
+        minLength: 1
+        nullable: false
+        pattern: \S+
+        type: string
 contentType: yaml
