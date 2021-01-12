@@ -1,7 +1,7 @@
 _id: spc_5b088d88705b4c7297d0942b66696573
 type: ApiSpec
 parentId: wrk_25c13fae238c4baa876c955857d62b3d
-modified: 1610482629407
+modified: 1610483014834
 created: 1610187008444
 fileName: ManageItems
 contents: >
@@ -12,7 +12,7 @@ contents: >
     version: 0.1.0
   servers:
 
-  - url: /
+  - url: http://localhost:10001/v0
 
   tags:
 
