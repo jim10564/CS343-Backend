@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: Manage Items API
+  title: ManageItems
   version: 0.1.0
 servers:
 - url: /
@@ -9,6 +9,7 @@ tags:
 paths:
   /items:
     get:
+      x-eov-operation-handler: endpoints
       operationId: listItems
       responses:
         "200":
@@ -19,8 +20,8 @@ paths:
           description: List items.
       tags:
       - Items
-      x-eov-operation-handler: controllers/ItemsController
     post:
+      x-eov-operation-handler: endpoints
       operationId: createItem
       requestBody:
         content:
@@ -57,36 +58,35 @@ paths:
               style: simple
       tags:
       - Items
-      x-eov-operation-handler: controllers/ItemsController
-  /items/{_id}:
-    get:
-      operationId: getItem
-      parameters:
-      - explode: false
-        in: path
-        name: _id
-        required: true
-        schema:
-          $ref: '#/components/schemas/Id'
-        style: simple
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Item'
-          description: Item.
-        "404":
-          description: Item not found.
-        default:
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: unexpected error
-      tags:
-      - Items
-      x-eov-operation-handler: controllers/ItemsController
+  # /items/{_id}:
+  #   get:
+  #     x-eov-operation-handler: routes/endpoints
+  #     operationId: getItem
+  #     parameters:
+  #     - explode: false
+  #       in: path
+  #       name: _id
+  #       required: true
+  #       schema:
+  #         $ref: '#/components/schemas/Id'
+  #       style: simple
+  #     responses:
+  #       "200":
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/Item'
+  #         description: Item.
+  #       "404":
+  #         description: Item not found.
+  #       default:
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/Error'
+  #         description: unexpected error
+  #     tags:
+  #     - Items
 components:
   schemas:
     Error:

@@ -16,14 +16,15 @@ const config = {
   SERVER_PORT: process.env.SERVER_PORT || "3000",
 };
 
+// Load openapi.yaml into OPENAPI_SCHEMA.
 function loadOpenApi(filePath) {
   const jsYaml = require("js-yaml");
   const fs = require("fs");
   const openapiYaml = fs.readFileSync(filePath);
-  const openapi = jsYaml.safeLoad(openapiYaml);
+  const openapi = jsYaml.load(openapiYaml);
   return openapi;
 }
-config.OPENAPI_SCHEMA = loadOpenApi(path.join(config.ROOT_DIR, 'api', 'openapi.yaml'));
+config.OPENAPI_SCHEMA = loadOpenApi(path.join(config.ROOT_DIR, 'openapi.yaml'));
 
 // Replace the URL in the OPENAPI_SCHEMA with HOST_BASE_URL
 // so the interactive documentation works properly.

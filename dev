@@ -34,11 +34,9 @@ function build-development-tools(){
 }
 
 function build-inso-image(){
-    echo
-    echo "Building inso image"
+    banner-in
     docker build --build-arg "NODE_IMAGE=${NODE_IMAGE}" --build-arg "INSO_NPM_PACKAGE=${INSO_NPM_PACKAGE}" -t inso tools/inso
-    echo "inso image built."
-    echo
+    banner-out
 }
 
 function inso(){
@@ -54,43 +52,19 @@ function npm(){
     docker run -it --rm  -v "${PWD}:/workdir" -w "/workdir" "${NODE_IMAGE}" npm "$@"
 }
 
-function openapi-generator-cli(){
-    docker run --rm -v "${PWD}:/workdir" -w "/workdir" "${OPENAPI_GENERATOR_CLI_IMAGE}" "$@"
-}
-
 
 ##########################################
 # Build commands
 
 function build(){
     inso-export-spec
-    validate-spec-with-openapi-generator-cli
-    generate-src
     build-image
 }
 
-function validate-spec-with-openapi-generator-cli(){
-    echo
-    echo "Validating openapi.yaml"
-    openapi-generator-cli validate -i openapi.yaml
-    echo "openapi.yaml validated."
-    echo
-}
-
-function generate-src(){
-    echo
-    echo "Generating src from openapi.yaml using openapi-generator-cli..."
-    openapi-generator-cli generate -i openapi.yaml -g nodejs-express-server -o src "$@"
-    echo "openapi.yaml generated."
-    echo
-}
-
 function build-image(){
-    echo
-    echo "Building docker image ${IMAGE}"
+    banner-in
     docker build --build-arg NODE_IMAGE="${NODE_IMAGE}" -t "${IMAGE}" .
-    echo "Docker image ${IMAGE} built."
-    echo
+    banner-out
 }
 
 
@@ -102,8 +76,7 @@ function start-development-environment(){
 }
 
 function stop-development-environment(){
-    echo
-    echo "Stopping all containers on network ${NETWORK_NAME}"
+    banner-in
     if docker ps -q -f network="${NETWORK_NAME}" | grep . > /dev/null
     then
         docker stop $(docker ps -q -f network="${NETWORK_NAME}")
@@ -111,9 +84,7 @@ function stop-development-environment(){
     else
         echo "No containers on ${NETWORK_NAME} found."
     fi
-    echo
 
-    echo
     echo "Removing all containers on network ${NETWORK_NAME}"
     if docker ps -aq -f network="${NETWORK_NAME}" | grep . > /dev/null
     then
@@ -122,13 +93,13 @@ function stop-development-environment(){
     else
         echo "No containers on ${NETWORK_NAME} found."
     fi
-    echo
+    banner-out
 
     remove-docker-network "${NETWORK_NAME}"
 }
 
 function create-docker-network(){
-    echo "Creating docker network ${1}"
+    banner-in "$@"
     if docker network ls | grep -E " ${1} " > /dev/null
     then
         echo "${1} exists"
@@ -136,19 +107,18 @@ function create-docker-network(){
         docker network create "${1}"
         echo "${1} created."
     fi
-    echo
+    banner-out "$@"
 }
 
 function remove-docker-network(){
-    echo
-    echo "Removing docker network ${1}"
+    banner-in "$@"
     if docker network ls | grep " ${1} " ; then
         docker network rm "${1}"
         echo "${1} removed."
     else
         echo "${1} does not exist."
     fi
-    echo
+    banner-out "$@"
 }
 
 ##########################################
@@ -179,8 +149,7 @@ function restart-backend(){
 
 
 function start-backend(){
-    echo
-    echo "Starting ${NAME}"
+    banner-in
     docker run --detach \
         --network test_network \
         --name "${NAME}" \
@@ -188,21 +157,18 @@ function start-backend(){
         -e HOST_BASE_URL="http://localhost:10001/v0" \
         -e MONGO_URI="mongodb://${MONGO_NAME}:27017" \
         "${IMAGE}"
-    echo "${NAME} started."
-    echo
+    banner-out
 }
 
 function start-mongo(){
-    echo
-    echo "Starting ${MONGO_NAME}"
+    banner-in
     docker run \
         --detach \
         --network "${NETWORK_NAME}" \
         --expose 27017 \
         --name "${MONGO_NAME}" \
         "${MONGO_IMAGE}"
-    echo "${MONGO_NAME} started."
-    echo
+    banner-out
 }
 
 function stop-and-remove-docker-container(){
@@ -210,28 +176,24 @@ function stop-and-remove-docker-container(){
     remove-docker-container "${1}"
 }
 function stop-docker-container(){
-    echo
-    echo "Stopping ${1}"
+    banner-in "$@"
     if docker ps | grep "${1}"
     then
         docker stop "${1}"
-        echo "${1} stopped."
     else
         echo "${1} is not running."
     fi
-    echo
+    banner-out "$@"
 }
 function remove-docker-container(){
-    echo
-    echo "Removing ${1}"
+    banner-in
     if docker ps -a | grep "${1}"
     then
         docker rm "${1}"
-        echo "${1} removed."
     else
         echo "${1} does not exist."
     fi
-    echo
+    banner-out
 }
 
 
@@ -241,33 +203,39 @@ function logs(){
 }
 
 function mongo-logs(){
-    echo "================ ${MONGO_NAME} ================"
+    banner-in
     docker logs "${MONGO_NAME}"
-    echo "================ ${MONGO_NAME} ================"
+    banner-out
 }
 
 function backend-logs(){
-    echo "================ ${NAME} ================"
+    banner-in
     docker logs "${NAME}"
-    echo "================ ${NAME} ================"
+    banner-out
 }
 
 ##########################################
 # Tools
 
 function inso-export-spec(){
-    echo
-    echo "Exporting spec..."
-    inso export spec "ManageItems" -o openapi.yaml
-    echo "Speci exported."
-    echo
+    banner-in
+    inso export spec "ManageItems" -o src/openapi.yaml
+    banner-out
 }
 
 function test-with-inso(){
+    banner-in
+    inso run test -e Internal ManageItems || true
+    banner-out
+}
+
+function banner-in(){
     echo
-    echo "Running unit tests with inso"
-    inso run test -e Internal ManageItems
-    echo "Tests ran."
+    echo "========= BEGIN $0 ${FUNCNAME[1]} ${@:1} ===================="
+}
+
+function banner-out(){
+    echo "========= END $0 ${FUNCNAME[1]} ${@:1} ======================"
     echo
 }
 
