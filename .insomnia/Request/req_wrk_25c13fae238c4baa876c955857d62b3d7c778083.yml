@@ -1,7 +1,7 @@
 _id: req_wrk_25c13fae238c4baa876c955857d62b3d7c778083
 type: Request
 parentId: fld_wrk_25c13fae238c4baa876c955857d62b3d44d25b5d
-modified: 1610483029577
+modified: 1610483729185
 created: 1610187128167
 url: "{{ base_url }}/items"
 name: /items
@@ -9,12 +9,11 @@ description: ""
 method: POST
 body:
   mimeType: application/json
-  text: '{"name":"bug"}'
+  text: "null"
 parameters: []
 headers:
   - name: Content-Type
     value: application/json
-    id: pair_ad4d30ce50e5425ca0b2a12e402d1982
 authentication: {}
 metaSortKey: -1610187128167
 isPrivate: false

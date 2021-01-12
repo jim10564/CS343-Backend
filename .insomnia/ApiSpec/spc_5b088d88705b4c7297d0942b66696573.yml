@@ -1,7 +1,7 @@
 _id: spc_5b088d88705b4c7297d0942b66696573
 type: ApiSpec
 parentId: wrk_25c13fae238c4baa876c955857d62b3d
-modified: 1610483014834
+modified: 1610483757200
 created: 1610187008444
 fileName: ManageItems
 contents: >
@@ -70,35 +70,6 @@ contents: >
                 style: simple
         tags:
         - Items
-    # /items/{_id}:
-    #   get:
-    #     x-eov-operation-handler: routes/endpoints
-    #     operationId: getItem
-    #     parameters:
-    #     - explode: false
-    #       in: path
-    #       name: _id
-    #       required: true
-    #       schema:
-    #         $ref: '#/components/schemas/Id'
-    #       style: simple
-    #     responses:
-    #       "200":
-    #         content:
-    #           application/json:
-    #             schema:
-    #               $ref: '#/components/schemas/Item'
-    #         description: Item.
-    #       "404":
-    #         description: Item not found.
-    #       default:
-    #         content:
-    #           application/json:
-    #             schema:
-    #               $ref: '#/components/schemas/Error'
-    #         description: unexpected error
-    #     tags:
-    #     - Items
   components:
     schemas:
       Error:
