@@ -6,115 +6,79 @@
 
 ## Developer Quickstart
 
-Prerequisites
+Requires
 
-* Bash
-* Docker
+* Bash (or some approximation of a linux style shell)
+* Docker installed and running
 
-Setup the development environment.
-Run this when you first sit down to work on the project.
+Clone this project, and position a command prompt in the root of this project.
 
-```bash
+`dev` is a bash script that contains a number of bash functions to manage/automate
+parts of the development process. Each function can be executed as a subcommand
+`/dev`. For example, if there is a function named `build`, then you can execute it
+like `./dev build`.
+
+Setup the development/testing environment.
+
+```
 ./dev setup
 ```
 
-Build, run, and test everything in the development environment.
-Run this after each change to test your change before committing.
+Build, start, and test the backend in the testing environment.
 
-```bash
+```
 ./dev cycle
 ```
 
-Tear down the development environment. Run this when you are
-done for the day and you don't want to leave containers running.
+Rerun the last command after every change you make to rebuild, restart,
+and retest the backend.
 
-```bash
-./dev teardown
-```
-
-`./dev` contains many subcommands that are used to implement the
-subcommands above. To discover these subcommands, read the contents
-of `./dev`. Any function defined in `./dev` can be ran as a subcommand.
-For example, there is a function named `logs`, you can run it like so
-`./dev logs` to display the logs of the running images.
-
-
-
-### Configuration
-
-To upgrade versions of the project or its dependencies, modify the following files.
-If you add a new dependency, be sure that it only needs Docker to run and its
-version can be controlled through the following files.
-
-* `/dev.env`
-* `/src/package.json`
-
-### /dev
-
-`/dev` contains a number of bash functions that are useful during development.
-Each function can be executed as a subcommand of `/dev`. For example,
-if there is a function named `build`, then you can execute it like `./dev build`.
-
-#### ./dev
-
-```
-./dev build
-```
-
-### Run automated tests
-
-After building...
-
-```
-./dev run-tests
-```
-
-### Manual testing
-
-After building, run the server...
-
-```
-./dev start
-```
-
-Open browser to `http://localhost:10001/api-docs` to view interactive documentation.
-
-View the logs...
+You can view the logs of the servers in the testing environment as follows.
 
 ```
 ./dev logs
 ```
 
-Stop the server...
+You can interact with and manually test the system running in the testing
+environment by opening a browser to <http://localhost:10001/v0/api-docs/>.
+
+You can rerun the automated tests only as follows.
 
 ```
-./dev stop
+./dev run-tests
 ```
 
-### OpenApi and Insomnia
+You might want to rerun just the tests if tests are the only thing you
+have changed since your last `./dev cycle`.  That way you don't have to
+rebuild and rerun everything.
 
-We use OpenApi to specify our REST API.
-The official source of the specification is stored in `/.insomnia`.
-Only use Insomnia-Designer to edit these files.
-The build scripts (`./dev build`) use Insomnia Inso to export
-the specification to `/openapi.yaml` and openapi-generator-cli to generate
-files in `/src/` including `/src/api/openapi.yaml` (which is not exactly the
-same as `/openapi.yaml`).
+When you are done and want to turn things off.
 
-If you want to make small changes that you don't intend to commit,
-you can edit `/openapi.yaml` directly, and then build the project.
+```
+./dev teardown
+```
 
-If you want to make a more permanent change, use Insomnia-Designer.
-Install Insomnia-Designer and then use it to clone the project
-using an access token that you get from GitLab. Then use it to edit
-the specification, commit the change, and push it to GitLab.
-Notice that Insomnia-Desigener keeps a separate local repository
-of the repository. So after you make, commit, and push your changes
-using Insomnia-Designer, you'll need to pull those changes into your
-local clone. Also note that Insomnia-Desinger knows how to create
-and use Git branches. One last note, Insomnia-Designer does NOT know
-how to deal with merge conflicts; so avoid them like the plague.
+This will stop all containers running in the testing environment. Images
+will remain.
 
-We also use Insomnia-Designer to design unit tests for the API.
-These can be ran from either within Insomnia-Designer or from
-the command-line using Inso (e.g., `./dev inso run test`).
+### Configuration and Dependencies
+
+`dev.env` contains a number environment variables that allow you to configure
+how `dev` behaves. These variables include version numbers of some of the
+dependencies used by the product, the build system, and the testing environment.
+
+`src/package.json` contains JavaScript dependencies used to implement the
+backend REST API server. Use the `npm` function in `dev` to manage them.
+
+```bash
+cd src
+../dev npm install     # Install into node_modules the depenencies listed in package.json
+../dev npm outdated    # Check which packages are outdated and by how much
+../dev npm update      # Update all packages to the most current version within the same major version.
+../dev npm install somepackage@latest   # Upgrade somepackage to the most current major version.
+```
+
+`src/openapi.yaml` contains the OpenAPI specification of the REST API.
+It contians metadata related to the API including a version number.
+
+`src/config.js` contains configuration specific to the implemetnation of the backend.

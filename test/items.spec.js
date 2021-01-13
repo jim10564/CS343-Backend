@@ -1,3 +1,31 @@
+// This test suit makes use of a number of frameworks and libraries.
+// The code is therefore a conglomeration of identifiers that are
+// related to these frameworks and libraries. Each is listed below
+// with its purpose, a sampling of identifiers related to them,
+// and a link to its documentation.
+//
+// axios
+//   - Used to make HTTP request to the SUT (system under test).
+//   - Related identifiers: axios, get, post, and response.
+//   - <https://github.com/axios/axios>
+// mocha
+//   - Provides the basic framework and syntax for running automated
+//     tests. We use its BDD syntax for specifying tests.
+//   - Related identifiers: describe and it
+//   - <https://mochajs.org/#bdd>
+// chai
+//   - Provides a plugable fluent assertion library. We use its expect BDD style.
+//   - Related identifiers: expect, use, to, be, have, equal, ...
+//   - <https://www.chaijs.com/api/bdd/>
+// api-contract-validator
+//   - Is a plugin for chai, which works with axios responses, that provides
+//     validation of responses against an OpenAPI specification. It also
+//     provides coverage reports that detail which parts of the OpenAPI
+//     specification have been covered by at least one unit test.
+//   - Related identifiers: matchApiSchema
+//   - <https://www.chaijs.com/plugins/api-contract-validator/>
+
+
 // A library to make http requests.
 const _axios = require("axios");
 
@@ -42,7 +70,6 @@ describe("/items", function() {
       const response = await axios.post("/items", {
         "name": "turkey"
       });
-      const _id = response.data._id;
       expect(response.data.name).to.equal("turkey");
     })
     it("returns a location containing the same id as the returned item", async function() {
@@ -55,7 +82,7 @@ describe("/items", function() {
     });
     it("increases the number of items by one", async function() {
       const firstGetResponse = await axios.get("/items");
-      const response = await axios.post("/items", {
+      await axios.post("/items", {
         "name": "turkey"
       });
       const secondGetResponse = await axios.get("/items");

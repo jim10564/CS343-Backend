@@ -13,6 +13,7 @@ source "${DIR}/dev.env"
 function setup(){
     build-development-tools
     start-development-environment
+    build-tester-image
 }
 
 function cycle(){
@@ -46,10 +47,10 @@ function build-tester-image(){
 function run-tests(){
     banner-in
     docker run -it --rm \
-        -e SUT_BASE_URL="${SUT_SERVER_BASE_URL}" \
+        -e SUT_BASE_URL="${SUT_SERVER_URL}" \
         -v "${PWD}/test:/app/test" \
         -v "${PWD}/src/openapi.yaml:/app/openapi.yaml" \
-        --network "${NETWORK_NAME}" tester "$@"
+        --network "${TEST_NETWORK}" tester "$@"
     banner-out
 }
 
@@ -70,35 +71,35 @@ function build-image(){
 # Development Environment
 
 function start-development-environment(){
-    create-docker-network "${NETWORK_NAME}"
+    create-docker-network "${TEST_NETWORK}"
 }
 
 function stop-development-environment(){
     banner-in
-    if docker ps -q -f network="${NETWORK_NAME}" | grep . > /dev/null
+    if docker ps -q -f network="${TEST_NETWORK}" | grep . > /dev/null
     then
-        docker stop $(docker ps -q -f network="${NETWORK_NAME}")
-        echo "Containers on ${NETWORK_NAME} have been stopped."
+        docker stop $(docker ps -q -f network="${TEST_NETWORK}")
+        echo "Containers on ${TEST_NETWORK} have been stopped."
     else
-        echo "No containers on ${NETWORK_NAME} found."
+        echo "No containers on ${TEST_NETWORK} found."
     fi
 
-    echo "Removing all containers on network ${NETWORK_NAME}"
-    if docker ps -aq -f network="${NETWORK_NAME}" | grep . > /dev/null
+    echo "Removing all containers on network ${TEST_NETWORK}"
+    if docker ps -aq -f network="${TEST_NETWORK}" | grep . > /dev/null
     then
-        docker rm $(docker ps -aq -f network="${NETWORK_NAME}")
-        echo "All container on ${NETWORK_NAME} removed."
+        docker rm $(docker ps -aq -f network="${TEST_NETWORK}")
+        echo "All container on ${TEST_NETWORK} removed."
     else
-        echo "No containers on ${NETWORK_NAME} found."
+        echo "No containers on ${TEST_NETWORK} found."
     fi
     banner-out
 
-    remove-docker-network "${NETWORK_NAME}"
+    remove-docker-network "${TEST_NETWORK}"
 }
 
 function create-docker-network(){
     banner-in "$@"
-    if docker network ls | grep -E " ${1} " > /dev/null
+    if docker network ls | grep "${1}$" > /dev/null
     then
         echo "${1} exists"
     else
@@ -110,7 +111,7 @@ function create-docker-network(){
 
 function remove-docker-network(){
     banner-in "$@"
-    if docker network ls | grep " ${1} " ; then
+    if docker network ls | grep "${1}$" ; then
         docker network rm "${1}"
         echo "${1} removed."
     else
@@ -145,11 +146,11 @@ function restart-backend(){
 function start-backend(){
     banner-in
     docker run --detach \
-        --network test_network \
+        --network ${TEST_NETWORK} \
         --name "${NAME}" \
-        -p "10001:${SUT_SERVER_PORT}" \
-        -e HOST_BASE_URL="${SUT_HOST_BASE_URL}" \
-        -e MONGO_URI="mongodb://${MONGO_NAME}:27017" \
+        -p "${SUT_HOST_URL_PORT}:${SUT_SERVER_URL_PORT}" \
+        -e HOST_BASE_URL="${SUT_HOST_URL}" \
+        -e MONGO_URI="${MONGO_URI}" \
         "${IMAGE}"
     banner-out
 }
@@ -158,7 +159,7 @@ function start-mongo(){
     banner-in
     docker run \
         --detach \
-        --network "${NETWORK_NAME}" \
+        --network "${TEST_NETWORK}" \
         --expose 27017 \
         --name "${MONGO_NAME}" \
         "${MONGO_IMAGE}"
@@ -175,7 +176,7 @@ function stop-and-remove-docker-container(){
 
 function stop-docker-container(){
     banner-in "$@"
-    if docker ps | grep "${1}"
+    if docker ps | grep "${1}$"
     then
         docker stop "${1}"
     else
@@ -186,7 +187,7 @@ function stop-docker-container(){
 
 function remove-docker-container(){
     banner-in
-    if docker ps -a | grep "${1}"
+    if docker ps -a | grep "${1}$"
     then
         docker rm "${1}"
     else
