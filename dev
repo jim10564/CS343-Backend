@@ -13,7 +13,6 @@ source "${DIR}/dev.env"
 function setup(){
     build-development-tools
     start-development-environment
-    build-proctor-image
 }
 
 function cycle(){
@@ -27,6 +26,13 @@ function teardown(){
     stop-development-environment
 }
 
+function clean(){
+    docker stop $(docker ps --filter label="${NAME}" -q)
+    docker rm $(docker ps --filter label="${NAME}" -qa)
+    docker rmi $(docker images --filter label="${NAME}" -q)
+    docker network rm $(docker network ls --filter label="${NAME}" -q)
+}
+
 ##########################################
 # Development Tools
 
@@ -35,12 +41,23 @@ function build-development-tools(){
 }
 
 function npm(){
-    docker run -it --rm  -v "${PWD}:/workdir" -w "/workdir" "${NODE_IMAGE}" npm "$@"
+    docker run \
+        -it \
+        --rm  \
+        --label "${NAME}" \
+        -v "${PWD}:/workdir" \
+        -w "/workdir" \
+        "${NODE_IMAGE}" \
+        npm "$@"
 }
 
 function build-proctor-image(){
     banner-in
-    docker build --build-arg "NODE_IMAGE=${NODE_IMAGE}" -t proctor testing/proctor
+    docker build \
+        --build-arg "NODE_IMAGE=${NODE_IMAGE}" \
+        --label "${NAME}" \
+        -t proctor \
+        testing/proctor
     banner-out
 }
 
@@ -48,7 +65,10 @@ function run-tests(){
     banner-in
     # Note that mocha wants the tests (plural) in a directory named test (singular).
     # So the plural to singular mapping here is intentional.
-    docker run -it --rm \
+    docker run \
+        -it \
+        --rm \
+        --label "${NAME}" \
         -e SUT_BASE_URL="${SUT_SERVER_URL}" \
         -e TEST_TIMEOUT_MS="${TEST_TIMEOUT_MS}" \
         -v "${PWD}/testing/tests:/app/test" \
@@ -66,7 +86,10 @@ function build(){
 
 function build-image(){
     banner-in
-    docker build --build-arg NODE_IMAGE="${NODE_IMAGE}" -t "${IMAGE}" .
+    docker build \
+        --label "${NAME}" \
+        --build-arg NODE_IMAGE="${NODE_IMAGE}" \
+        -t "${IMAGE}" .
     banner-out
 }
 
@@ -102,11 +125,11 @@ function stop-development-environment(){
 
 function create-docker-network(){
     banner-in "$@"
-    if docker network ls | grep "${1}$" > /dev/null
+    if docker network ls | grep "${1}" > /dev/null
     then
         echo "${1} exists"
     else
-        docker network create "${1}"
+        docker network create --label "${NAME}" "${1}"
         echo "${1} created."
     fi
     banner-out "$@"
@@ -114,7 +137,7 @@ function create-docker-network(){
 
 function remove-docker-network(){
     banner-in "$@"
-    if docker network ls | grep "${1}$" ; then
+    if docker network ls | grep "${1}" ; then
         docker network rm "${1}"
         echo "${1} removed."
     else
@@ -148,8 +171,10 @@ function restart-backend(){
 
 function start-backend(){
     banner-in
-    docker run --detach \
+    docker run \
+        --detach \
         --network ${TEST_NETWORK} \
+        --label "${NAME}" \
         --name "${NAME}" \
         -p "${SUT_HOST_URL_PORT}:${SUT_SERVER_URL_PORT}" \
         -e HOST_BASE_URL="${SUT_HOST_URL}" \
@@ -164,6 +189,7 @@ function start-mongo(){
         --detach \
         --network "${TEST_NETWORK}" \
         --expose 27017 \
+        --label "${NAME}" \
         --name "${MONGO_NAME}" \
         "${MONGO_IMAGE}"
     banner-out
