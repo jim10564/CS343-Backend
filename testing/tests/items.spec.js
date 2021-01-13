@@ -51,6 +51,7 @@ use(matchApiSchema({
 }));
 
 describe("/items", function() {
+  this.timeout(process.env.TEST_TIMEOUT_MS);
 
   describe("List items (GET /items)", function() {
     it("matches openapi.yaml", async function() {

@@ -13,7 +13,7 @@ source "${DIR}/dev.env"
 function setup(){
     build-development-tools
     start-development-environment
-    build-tester-image
+    build-proctor-image
 }
 
 function cycle(){
@@ -31,26 +31,29 @@ function teardown(){
 # Development Tools
 
 function build-development-tools(){
-    build-tester-image
+    build-proctor-image
 }
 
 function npm(){
     docker run -it --rm  -v "${PWD}:/workdir" -w "/workdir" "${NODE_IMAGE}" npm "$@"
 }
 
-function build-tester-image(){
+function build-proctor-image(){
     banner-in
-    docker build --build-arg "NODE_IMAGE=${NODE_IMAGE}" -t tester tester
+    docker build --build-arg "NODE_IMAGE=${NODE_IMAGE}" -t proctor testing/proctor
     banner-out
 }
 
 function run-tests(){
     banner-in
+    # Note that mocha wants the tests (plural) in a directory named test (singular).
+    # So the plural to singular mapping here is intentional.
     docker run -it --rm \
         -e SUT_BASE_URL="${SUT_SERVER_URL}" \
-        -v "${PWD}/test:/app/test" \
+        -e TEST_TIMEOUT_MS="${TEST_TIMEOUT_MS}" \
+        -v "${PWD}/testing/tests:/app/test" \
         -v "${PWD}/src/openapi.yaml:/app/openapi.yaml" \
-        --network "${TEST_NETWORK}" tester "$@"
+        --network "${TEST_NETWORK}" proctor "$@"
     banner-out
 }
 
