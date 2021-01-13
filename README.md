@@ -2,6 +2,7 @@
 
 * MONGO_URI - The MongoDB connection string.
 * HOST_BASE_URL - The URL used to access the service from outside the Docker environment.
+* SERVER_PORT - The port the server listens on within the Docker container.
 
 ## Developer Quickstart
 

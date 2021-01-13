@@ -3,7 +3,7 @@ info:
   title: ManageItems
   version: 0.1.0
 servers:
-- url: /
+- url: http://localhost:10001/v0
 tags:
 - name: Items
 paths:
@@ -58,35 +58,6 @@ paths:
               style: simple
       tags:
       - Items
-  # /items/{_id}:
-  #   get:
-  #     x-eov-operation-handler: routes/endpoints
-  #     operationId: getItem
-  #     parameters:
-  #     - explode: false
-  #       in: path
-  #       name: _id
-  #       required: true
-  #       schema:
-  #         $ref: '#/components/schemas/Id'
-  #       style: simple
-  #     responses:
-  #       "200":
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/Item'
-  #         description: Item.
-  #       "404":
-  #         description: Item not found.
-  #       default:
-  #         content:
-  #           application/json:
-  #             schema:
-  #               $ref: '#/components/schemas/Error'
-  #         description: unexpected error
-  #     tags:
-  #     - Items
 components:
   schemas:
     Error:

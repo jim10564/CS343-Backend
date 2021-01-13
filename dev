@@ -19,7 +19,7 @@ function cycle(){
     stop
     build
     start
-    test-with-inso
+    run-tests
 }
 
 function teardown(){
@@ -30,34 +30,33 @@ function teardown(){
 # Development Tools
 
 function build-development-tools(){
-    build-inso-image
-}
-
-function build-inso-image(){
-    banner-in
-    docker build --build-arg "NODE_IMAGE=${NODE_IMAGE}" --build-arg "INSO_NPM_PACKAGE=${INSO_NPM_PACKAGE}" -t inso tools/inso
-    banner-out
-}
-
-function inso(){
-    if docker network ls | grep " ${NETWORK_NAME} " > /dev/null
-    then
-        docker run -i --rm --network "${NETWORK_NAME}" -v "$PWD:/workdir" -w "/workdir" inso inso "$@"
-    else
-        docker run -i --rm --v "$PWD:/workdir" -w "/workdir" inso inso "$@"
-    fi
+    build-tester-image
 }
 
 function npm(){
     docker run -it --rm  -v "${PWD}:/workdir" -w "/workdir" "${NODE_IMAGE}" npm "$@"
 }
 
+function build-tester-image(){
+    banner-in
+    docker build --build-arg "NODE_IMAGE=${NODE_IMAGE}" -t tester tester
+    banner-out
+}
+
+function run-tests(){
+    banner-in
+    docker run -it --rm \
+        -e SUT_BASE_URL="http://${NAME}:3000/v0" \
+        -v "${PWD}/test:/app/test" \
+        -v "${PWD}/src/openapi.yaml:/app/openapi.yaml" \
+        --network "${NETWORK_NAME}" tester "$@"
+    banner-out
+}
 
 ##########################################
 # Build commands
 
 function build(){
-    inso-export-spec
     build-image
 }
 
@@ -66,7 +65,6 @@ function build-image(){
     docker build --build-arg NODE_IMAGE="${NODE_IMAGE}" -t "${IMAGE}" .
     banner-out
 }
-
 
 ##########################################
 # Development Environment
@@ -147,7 +145,6 @@ function restart-backend(){
     start-backend
 }
 
-
 function start-backend(){
     banner-in
     docker run --detach \
@@ -171,10 +168,14 @@ function start-mongo(){
     banner-out
 }
 
+##########################################
+# Start and stop docker containers
+
 function stop-and-remove-docker-container(){
     stop-docker-container "${1}"
     remove-docker-container "${1}"
 }
+
 function stop-docker-container(){
     banner-in "$@"
     if docker ps | grep "${1}"
@@ -185,6 +186,7 @@ function stop-docker-container(){
     fi
     banner-out "$@"
 }
+
 function remove-docker-container(){
     banner-in
     if docker ps -a | grep "${1}"
@@ -196,6 +198,8 @@ function remove-docker-container(){
     banner-out
 }
 
+##########################################
+# Logs
 
 function logs(){
     mongo-logs
@@ -215,19 +219,7 @@ function backend-logs(){
 }
 
 ##########################################
-# Tools
-
-function inso-export-spec(){
-    banner-in
-    inso export spec "ManageItems" -o src/openapi.yaml
-    banner-out
-}
-
-function test-with-inso(){
-    banner-in
-    inso run test -e Internal ManageItems || true
-    banner-out
-}
+# Banners
 
 function banner-in(){
     echo

@@ -1,0 +1,17 @@
+{
+  "name": "manage-items-tester",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "api-contract-validator": "^2.2.2",
+    "axios": "^0.21.1",
+    "chai": "^4.2.0",
+    "mocha": "^8.2.1"
+  }
+}

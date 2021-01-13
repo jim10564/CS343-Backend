@@ -3,7 +3,7 @@
 
 1. Define the endpoint in openapi.yml and set the following (see OpenAPI documentation [1]).
   a. `x-eov-operation-handler: endpoints`
-  b. `operationId: foo` where foo is the name of the endpoint.
+  b. `operationId: foo` where foo is the name of the static method in Endpoints.
 2. Add a new static method to Endpoints (in endpoints.js) named `foo`.
 
 ## Implementing the new endpoint
