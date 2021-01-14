@@ -1,0 +1,87 @@
+version: "3.8"
+services:
+
+  # Backend is the service we are developing in this project.
+  # It is the service under test (SUT).
+  backend:
+    image: org.librefoodpantry.bnm.inventory.items.backend:0.1.0-dev
+    build:
+      context: .
+      args:
+        NODE_IMAGE: node:14
+    expose:
+      - 3000
+    ports:
+      - 10001:3000
+    environment:
+      HOST_BASE_URL: http://localhost:10001/v0
+      MONGO_URI: mongodb://mongo
+    networks:
+      - test-network
+    depends_on:
+      - mongo
+
+  # This is the database used by the backend.
+  mongo:
+    image: mongo:4
+    networks:
+      - test-network
+
+  # Command to run the tests.
+  #   Run from the root of the project
+  #     docker-compose run --rm test-runner
+  test-runner:
+
+    build:
+      context: ./testing/test-runner
+      args:
+        NODE_IMAGE: node:14
+
+    environment:
+
+      # The SUT will be accessed from inside the Docker network.
+      # So we use "backend" as the server name, not "localhost".
+      # And that service listens on port "3000".
+      SUT_BASE_URL: http://backend:3000/v0
+
+      # Give each unit test extra time since they must send
+      # HTTP requests on a possibly slow development system.
+      # If your tests are experiencing timeouts, increase this number.
+      TEST_TIMEOUT_MS: 5000
+
+    volumes:
+
+      # Mount the unit tests.
+      - type: bind
+        source: ./testing/tests
+        target: /app/test
+        read_only: true
+
+      # Mount the OpenAPI spec, needed for validation.
+      - type: bind
+        source: ./src/openapi.yaml
+        target: /app/openapi.yaml
+        read_only: true
+
+    networks:
+      - test-network
+
+    depends_on:
+      - backend
+
+  # Command to manage NodeJS dependencies.
+  #   Run from the root of the project.
+  #     docker-compose run --rm npm
+  #   Run from a directory other than the root of the project.
+  #     docker-compose -f ../docker-compose.yaml --rm npm
+  npm:
+    image: node:14
+    entrypoint: [ "npm" ]
+    volumes:
+      - type: bind
+        source: ${PWD}
+        target: /workdir
+    working_dir: /workdir
+
+networks:
+  test-network:

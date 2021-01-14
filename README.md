@@ -1,74 +1,54 @@
 ## Environment Variables
 
-* MONGO_URI - The MongoDB connection string.
 * HOST_BASE_URL - The URL used to access the service from outside the Docker environment.
-* SERVER_PORT - The port the server listens on within the Docker container.
+* MONGO_URI - The MongoDB connection string.
 
 ## Developer Quickstart
 
-Requires
+Prerequisites
 
-* Bash (or some approximation of a linux style shell)
-* Docker installed and running
+* Git
+* Docker
+* Bash (or a bashlike shell)
 
-Clone this project, and position a command prompt in the root of this project.
+Use docker-compose and docker to build, run, and test the services in this project.
 
-`dev` is a bash script that contains a number of bash functions to manage/automate
-parts of the development process. Each function can be executed as a subcommand
-`/dev`. For example, if there is a function named `build`, then you can execute it
-like `./dev build`.
+Here is a typical sequence to build, run, and test the backend (a.k.a. the service under test, or SUT).
 
-Setup the development/testing environment.
-
-```
-./dev setup
-```
-
-Build, start, and test the backend in the testing environment.
-
-```
-./dev cycle
+```bash
+docker-compose down --remove-orphans --volumes  # stop and remove anything from a previous run
+docker-compose build                            # build all the images
+docker-compose up --detach backend              # start backend and its dependencies
+docker-compose run --rm test-runner             # run the tests
 ```
 
-Rerun the last command after every change you make to rebuild, restart,
-and retest the backend.
+This sequence is so common that we put it into a bash script.
 
-You can view the logs of the servers in the testing environment as follows.
-
-```
-./dev logs
+```bash
+./dev test-sut
 ```
 
-You can interact with and manually test the system running in the testing
-environment by opening a browser to <http://localhost:10001/v0/api-docs/>.
+You can run any function as a subcommand of `./dev`. Do read `./dev` to learn
+what else you can do with it.
 
-You can rerun the automated tests only as follows.
+Note that the SUT is still running. With it running, you can manually test it by
+pointing your browser to <http://localhost:10001/api-docs/>.
 
-```
-./dev run-tests
-```
-
-You might want to rerun just the tests if tests are the only thing you
-have changed since your last `./dev cycle`.  That way you don't have to
-rebuild and rerun everything.
-
-When you are done and want to turn things off.
+To stop and remove the running containers...
 
 ```
-./dev teardown
+./dev down
 ```
-
-This will stop all containers running in the testing environment. Images
-will remain.
 
 ### Configuration and Dependencies
 
-`dev.env` contains a number environment variables that allow you to configure
-how `dev` behaves. These variables include version numbers of some of the
-dependencies used by the product, the build system, and the testing environment.
+`docker-compose.yaml` contains the configuration for building docker images
+and configuring containers to run togther, including configuration of the
+test environment.
 
 `src/package.json` contains JavaScript dependencies used to implement the
-backend REST API server. Use the `npm` function in `dev` to manage them.
+backend REST API server. Use `docker-compose run --rm npm` (or `./dev npm`)
+to manage them. For example,
 
 ```bash
 cd src
@@ -82,3 +62,6 @@ cd src
 It contians metadata related to the API including a version number.
 
 `src/config.js` contains configuration specific to the implemetnation of the backend.
+
+`testing/test-runner/package.json` contains the dependencies for the test-runner. Again
+use `./dev npm` to manage them.
