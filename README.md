@@ -2,13 +2,13 @@
 
 Provides a backend REST API server for managing items in a larger inventory system.
 
-> IMPORTANT: This project is not intended for production enviornments.
+> IMPORTANT: This project is not intended for production environments.
 > It was built as an educational exercise and is intended to serve as an educational
 > example.
 
 ## Using this image
 
-> ASPERATIONAL: This section is asperational. That means things probably don't work
+> ASPIRATIONAL: This section is aspirational. That means things probably don't work
 > exactly as described. This section is intended to describe how we expect the image
 > to be consumed once it is actually delivered to a container registry.
 
@@ -67,7 +67,7 @@ Prerequisites
 
 * Git
 * Docker
-* Bash (or a bashlike shell)
+* Bash (or a bash-like shell)
 
 Use docker-compose and docker to build, run, and test the services in this project.
 
@@ -101,7 +101,7 @@ To stop and remove the running containers...
 ### Configuration and Dependencies
 
 `docker-compose.yaml` contains the configuration for building docker images
-and configuring containers to run togther, including configuration of the
+and configuring containers to run together, including configuration of the
 test environment.
 
 `src/package.json` contains JavaScript dependencies used to implement the
@@ -117,9 +117,9 @@ cd src
 ```
 
 `src/openapi.yaml` contains the OpenAPI specification of the REST API.
-It contians metadata related to the API including a version number.
+It contains metadata related to the API including a version number.
 
-`src/config.js` contains configuration specific to the implemetnation of the backend.
+`src/config.js` contains configuration specific to the implementation of the backend.
 
 `testing/test-runner/package.json` contains the dependencies for the test-runner. Again
 use `./dev npm` to manage them.
