@@ -1,3 +1,53 @@
+# org.librefoodpantry.bnm.inventory.items.backend
+
+Provides a backend REST API server for managing items in a larger inventory system.
+
+> IMPORTANT: This project is not intended for production enviornments. It was built as an educational exercise and is intended to serve as an educational example.
+
+## Using this image
+
+To run an instance, let's assume you have a MongoDB container named mongo-for-backend
+running on network named network.mongo-for-backend. Let's also assume that the backend
+image is in the container registry `http://container-registry.librefoodpantry.org/`.
+Then the following command would deploy a backend container in your Docker environment
+on the same network as the MongoDB container, and the service would be available outside
+the docker environment on the host machine at <http://localhost:10001/v0>
+
+```bash
+docker run \
+    --port="10001:3000" \
+    -e HOST_BASE_URL=http://localhost:10001/v0 \
+    -e MONGO_URI=mongodb://mongo-for-backend \
+    --network=network.mongo-for-backend \
+    http://container-registry.librefoodpantry.org/org.librefoodpantry.bnm.inventory.items.backend
+```
+
+Here is a docker-compose file that demonstrates the same.
+
+```yaml
+version: "3.8"
+services:
+  backend:
+    image: http://container-registry.librefoodpantry.org/org.librefoodpantry.bnm.inventory.items.backend
+    ports:
+      - 10001:3000
+    environment:
+      HOST_BASE_URL: http://localhost:10001/v0
+      MONGO_URI: mongodb://mongo-for-backend
+    networks:
+      - network.mongo-for-backend
+    depends_on:
+      - mongo-for-backend
+
+  mongo-for-backend:
+    image: mongo:4
+    networks:
+      - network.mongo-for-backend
+
+networks:
+  network.mongo-for-backend:
+```
+
 ## Environment Variables
 
 * HOST_BASE_URL - The URL used to access the service from outside the Docker environment.
