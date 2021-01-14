@@ -59,7 +59,7 @@ networks:
 * HOST_BASE_URL - The URL used to access the service from outside the Docker environment.
 * MONGO_URI - The MongoDB connection string.
 
-## Developer Quickstart
+## Developer Quick Start
 
 > REAL: This section is real. Things should work. If not, let someone know.
 
