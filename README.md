@@ -2,9 +2,15 @@
 
 Provides a backend REST API server for managing items in a larger inventory system.
 
-> IMPORTANT: This project is not intended for production enviornments. It was built as an educational exercise and is intended to serve as an educational example.
+> IMPORTANT: This project is not intended for production enviornments.
+> It was built as an educational exercise and is intended to serve as an educational
+> example.
 
 ## Using this image
+
+> ASPERATIONAL: This section is asperational. That means things probably don't work
+> exactly as described. This section is intended to describe how we expect the image
+> to be consumed once it is actually delivered to a container registry.
 
 To run an instance, let's assume you have a MongoDB container named mongo-for-backend
 running on network named network.mongo-for-backend. Let's also assume that the backend
@@ -54,6 +60,8 @@ networks:
 * MONGO_URI - The MongoDB connection string.
 
 ## Developer Quickstart
+
+> REAL: This section is real. Things should work. If not, let someone know.
 
 Prerequisites
 
