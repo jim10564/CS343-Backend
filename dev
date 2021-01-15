@@ -22,6 +22,12 @@ function npm(){
     docker-compose -f "${DIR}/docker-compose.yaml" run --rm npm "$@"
 }
 
+function push-image(){
+    source .env.gitlab.credentials
+    docker login -u "${USERNAME}" -p "${REGISTRY_ACCESS_TOKEN}" registry.gitlab.com
+    docker push registry.gitlab.com/librefoodpantry/training/spikeathons/winter-2021/stoney-manage-items/backend
+}
+
 # Run build if we were called (not sourced) from the command line.
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]] ; then
     # Run the subcommand requested... for example `./demo restart` runs restart()

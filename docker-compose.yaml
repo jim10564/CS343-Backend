@@ -4,7 +4,7 @@ services:
   # Backend is the service we are developing in this project.
   # It is the service under test (SUT).
   backend:
-    image: org.librefoodpantry.bnm.inventory.items.backend:0.1.0-dev
+    image: registry.gitlab.com/librefoodpantry/training/spikeathons/winter-2021/stoney-manage-items/backend
     build:
       context: .
       args:

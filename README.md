@@ -14,7 +14,7 @@ Provides a backend REST API server for managing items in a larger inventory syst
 
 To run an instance, let's assume you have a MongoDB container named mongo-for-backend
 running on network named network.mongo-for-backend. Let's also assume that the backend
-image is in the container registry `http://container-registry.librefoodpantry.org/`.
+image is in the container registry `registry.gitlab.com/librefoodpantry/training/spikeathons/winter-2021/stoney-manage-items/backend`.
 Then the following command would deploy a backend container in your Docker environment
 on the same network as the MongoDB container, and the service would be available outside
 the docker environment on the host machine at <http://localhost:10001/v0>
@@ -25,7 +25,7 @@ docker run \
     -e HOST_BASE_URL=http://localhost:10001/v0 \
     -e MONGO_URI=mongodb://mongo-for-backend \
     --network=network.mongo-for-backend \
-    http://container-registry.librefoodpantry.org/org.librefoodpantry.bnm.inventory.items.backend
+    registry.gitlab.com/librefoodpantry/training/spikeathons/winter-2021/stoney-manage-items/backend
 ```
 
 Here is a docker-compose file that demonstrates the same.
