@@ -34,7 +34,7 @@ Here is a docker-compose file that demonstrates the same.
 version: "3.8"
 services:
   backend:
-    image: http://container-registry.librefoodpantry.org/org.librefoodpantry.bnm.inventory.items.backend
+    image: registry.gitlab.com/librefoodpantry/training/spikeathons/winter-2021/stoney-manage-items/backend
     ports:
       - 10001:3000
     environment:
