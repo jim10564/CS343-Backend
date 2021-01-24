@@ -4,6 +4,7 @@ const path = require('path');
 
 // Load 3rd-party libraries.
 const express = require('express');
+const cors = require('cors');
 const OpenApiValidator = require('express-openapi-validator');
 const bodyParser = require('body-parser');
 const swaggerUI = require('swagger-ui-express');
@@ -14,6 +15,9 @@ const logger = require('./logger');
 
 // Create express app.
 const app = express();
+
+// Enable CORS Requests for ALL requests.
+app.use(cors());
 
 // Set up body parsers for the request body types you expect.
 // Must be specified prior to endpoints.
