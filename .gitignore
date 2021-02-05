@@ -1,2 +1,6 @@
+# These are downloaded based on package.json files.
 node_modules
+
+# Ignore all environment files.
+# They may have secrets and are system specific.
 .env*
