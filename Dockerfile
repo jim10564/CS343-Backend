@@ -6,15 +6,18 @@ FROM ${NODE_IMAGE}
 # Create /app and set it to our working directory.
 WORKDIR /app
 
-# Turn /app over to the node user.
+# Best practice: Don't run as root.
+# So we will run as node.
+# So we need to change the ownership of /app to node.
 RUN chown node:node /app
 
-# Run as the user node (defined in Node's image) rather than as root.
+# Now run as node.
 USER node
 
 # Our server is based on ExpressJS, which listens on port 3000 by default.
 EXPOSE 3000
 
+# Set NODE_ENV to production.
 # This causes ExpressJS and other dependencies to be as efficient as possible,
 # disabling caching, produces less log messages, etc.
 # During development, this can be overridden using by passing a different
