@@ -1,27 +1,23 @@
-# NODE_IMAGE is passed in so that we don't hard-code the version of Node we use.
+# Dockerfile for building container for the Items REST API backend server.
+
+# NODE_IMAGE is passed when building the container. That way we don't hardcode
+# the image or its version that this container is based on.
 ARG NODE_IMAGE
 FROM ${NODE_IMAGE}
 
-# /app will contain our application.
-# Create /app and set it to our working directory.
+# /app will hold our application. Create it and make it our working directory.
 WORKDIR /app
 
-# Best practice: Don't run as root.
-# So we will run as node.
-# So we need to change the ownership of /app to node.
+# Best practice: Don't run as root. Instead run as node (created in node image)
 RUN chown node:node /app
-
-# Now run as node.
 USER node
 
-# Our server is based on ExpressJS, which listens on port 3000 by default.
+# ExpressJS listens on 3000 by default. Expose it.
 EXPOSE 3000
 
-# Set NODE_ENV to production.
-# This causes ExpressJS and other dependencies to be as efficient as possible,
-# disabling caching, produces less log messages, etc.
-# During development, this can be overridden using by passing a different
-# value for NODE_ENV. E.g., docker run -e NODE_ENV=development ...
+# Setting NODE_ENV to production improves efficiencies.
+# During development, override by passing a development when running
+# the container. E.g., docker run -e NODE_ENV=development ...
 ENV NODE_ENV=production
 
 # When ran, call node on index.js.
@@ -31,5 +27,5 @@ CMD [ "node", "index.js" ]
 COPY ./src/package*.json /app/
 RUN npm install
 
-# Install our server.
+# Install our server code.
 COPY ./src /app/
