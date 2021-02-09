@@ -7,7 +7,7 @@ class Endpoints {
     try {
       const itemData = request.body;
       const item = await Items.create(itemData);
-      const resourceUri = `${request.originalUrl}/${item._id}`
+      const resourceUri = `${request.originalUrl}/${item._id}`;
       response.status(201).location(resourceUri).json(item);
     } catch (e) {
       logger.error("Endpoints.createItem", e);
