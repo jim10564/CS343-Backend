@@ -1,13 +1,12 @@
-const config = require("./config");
+const Database = require("./database");
 const logger = require("./logger");
-const { MongoClient, ObjectID } = require("mongodb");
+
 
 class Items {
   static async getAll() {
     try {
-      const mongoClient = new MongoClient(config.MONGO_URI, { useUnifiedTopology: true });
-      await mongoClient.connect();
-      const items_cursor = await mongoClient.db("items").collection("items").find();
+      const itemsCollection = await getItemsCollection();
+      const items_cursor = itemsCollection.find();
       let items = await items_cursor.toArray();
       items.forEach(item => {
         item._id = item._id.toHexString();
@@ -25,11 +24,9 @@ class Items {
 
   static async create(itemData) {
     try {
-      const mongoClient = new MongoClient(config.MONGO_URI, { useUnifiedTopology: true });
-      await mongoClient.connect();
-      const collection = mongoClient.db("items").collection("items");
-      const result = await collection.insertOne(itemData);
-      let item = await collection.findOne({_id: result.insertedId});
+      const itemsCollection = await getItemsCollection();
+      const result = await itemsCollection.insertOne(itemData);
+      let item = await itemsCollection.findOne({_id: result.insertedId});
       item._id = item._id.toHexString();
       return item;
     } catch (e) {
@@ -43,4 +40,11 @@ class Items {
   }
 }
 
-module.exports = {Items};
+
+async function getItemsCollection() {
+  const database = await Database.get();
+  return database.db("items").collection("items");
+}
+
+
+module.exports = Items;

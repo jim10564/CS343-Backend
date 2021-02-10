@@ -1,5 +1,6 @@
 const logger = require("./logger");
-const { Items } = require("./db");
+const Items = require("./items");
+
 
 class Endpoints {
 
