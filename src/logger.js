@@ -1,3 +1,15 @@
+/**
+ * Provides a winston.js logger object.
+ * See https://github.com/winstonjs/winston for documentation.
+ *
+ * Usage:
+ *    const logger = require("./logger.js");
+ *
+ *    logger.error("some error message");
+ *    logger.info("some informative message");
+ *    logger.warn("some warning message");
+ *    logger.debug("some debug message");
+ */
 const { transports, createLogger, format } = require('winston');
 
 const logger = createLogger({
@@ -5,6 +17,7 @@ const logger = createLogger({
   format: format.combine(
     format.timestamp(),
     format.json(),
+    format.prettyPrint(),
   ),
   defaultMeta: { service: 'user-service' },
   transports: [
@@ -12,8 +25,5 @@ const logger = createLogger({
   ],
 });
 
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(new transports.Console({ format: format.simple() }));
-}
 
 module.exports = logger;
