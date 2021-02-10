@@ -1,3 +1,8 @@
+/**
+ * items.js is responsible for manipulating the items collection in the
+ * Mongo database. In architecture parlance, it is a Data Access Object.
+ * It abstracts away the details of interact with the database.
+ */
 const Database = require("./database");
 const logger = require("./logger");
 
