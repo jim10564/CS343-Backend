@@ -8,7 +8,6 @@ const Items = require("./items");
 
 
 class Endpoints {
-
   /**
    * POST /items
    *
