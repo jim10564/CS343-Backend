@@ -1,25 +1,31 @@
 openapi: 3.0.3
+
+
 info:
   title: ManageItems
   version: 0.1.0
+
+
 servers:
-- url: http://localhost:10001/v0
-tags:
-- name: Items
+  # This is overriden by HOST_BASE_URL.
+  - url: http://localhost:10001/v0
+
+
 paths:
   /items:
+    description: For managing items.
     get:
+      description: Get list of items.
       x-eov-operation-handler: endpoints
       operationId: listItems
       responses:
         "200":
+          description: OK.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ItemArray'
-          description: List items.
-      tags:
-      - Items
+
     post:
       x-eov-operation-handler: endpoints
       operationId: createItem
@@ -56,8 +62,7 @@ paths:
                 nullable: false
                 type: string
               style: simple
-      tags:
-      - Items
+
 components:
   schemas:
     Error:
@@ -68,8 +73,8 @@ components:
         message:
           type: string
       required:
-      - code
-      - message
+        - code
+        - message
     ItemData:
       example:
         name: Canned tuna
@@ -83,7 +88,7 @@ components:
           pattern: \S+
           type: string
       required:
-      - name
+        - name
       type: object
     ItemArray:
       items:
@@ -114,8 +119,8 @@ components:
           pattern: \S+
           type: string
       required:
-      - _id
-      - name
+        - _id
+        - name
       type: object
     Id:
       description: Unique identifier consisting of a 24 digit hexidecimal values (a
