@@ -14,17 +14,20 @@ servers:
 paths:
   /items:
     description: For managing items.
+
+
     get:
       description: Get list of items.
       x-eov-operation-handler: endpoints
       operationId: listItems
       responses:
         "200":
-          description: OK.
+          description: OK
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ItemArray'
+
 
     post:
       x-eov-operation-handler: endpoints
@@ -65,64 +68,51 @@ paths:
 
 components:
   schemas:
-    Error:
-      properties:
-        code:
-          format: int32
-          type: integer
-        message:
-          type: string
-      required:
-        - code
-        - message
+
     ItemData:
-      example:
-        name: Canned tuna
+      description: Item data without an _id.
+      example: {
+        "name": "Canned tuna"
+      }
+      type: object
       properties:
         name:
-          description: Name of the item.
-          example: Canned tuna
-          maxLength: 128
-          minLength: 1
-          nullable: false
-          pattern: \S+
-          type: string
+          $ref: "#/components/schemas/ItemName"
       required:
         - name
-      type: object
+
     ItemArray:
+      type: array
+      nullable: false
       items:
         $ref: '#/components/schemas/Item'
-      nullable: false
-      type: array
+
     Item:
-      example:
-        name: Canned tuna
-        _id: 0123456789aBcDeF01234567
+      example: {
+        "name": "Canned tuna",
+        "_id": "0123456789aBcDeF01234567"
+      }
       properties:
         _id:
-          description: Unique identifier consisting of a 24 digit hexidecimal values
-            (a MongoDB stingified ObjectID)
-          example: 0123456789aBcDeF01234567
-          maxLength: 24
-          minLength: 24
-          nullable: false
-          pattern: ^[a-zA-Z0-9]+$
-          type: string
+          $ref: "#/components/schemas/MongoId"
         name:
-          description: Name of the item.
-          example: Canned tuna
-          maxLength: 128
-          minLength: 1
-          nullable: false
-          # Must contain at least one non-whitespace character.
-          pattern: \S+
-          type: string
+          $ref: "#/components/schemas/ItemName"
       required:
         - _id
         - name
       type: object
-    Id:
+
+    ItemName:
+      description: Name of the item.
+      example: Canned tuna
+      maxLength: 128
+      minLength: 1
+      nullable: false
+      # Must contain at least one non-whitespace character.
+      pattern: \S+
+      type: string
+
+    MongoId:
       description: Unique identifier consisting of a 24 digit hexidecimal values (a
         MongoDB stingified ObjectID)
       example: 0123456789aBcDeF01234567
@@ -131,11 +121,36 @@ components:
       nullable: false
       pattern: ^[a-zA-Z0-9]+$
       type: string
-    ItemName:
-      description: Name of the item.
-      example: Canned tuna
-      maxLength: 128
-      minLength: 1
-      nullable: false
-      pattern: \S+
-      type: string
+
+    EovError:
+      description: Not Acceptable
+      type: object
+      example: {
+        "message": ".response should have required property 'name', .response should have required property 'id'",
+        "errors": [
+          {
+            "path": ".response.name",
+            "message": "should have required property 'name'",
+            "errorCode": "required.openapi.validation"
+          },
+          {
+            "path": ".response.id",
+            "message": "should have required property 'id'",
+            "errorCode": "required.openapi.validation"
+          }
+        ]
+      }
+      properties:
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+              message:
+                type: string
+              errorCode:
+                type: "string"
