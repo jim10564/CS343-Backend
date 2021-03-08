@@ -65,6 +65,13 @@ paths:
                 nullable: false
                 type: string
               style: simple
+        "400":
+          description: Bad requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EovError'
+
 
 components:
   schemas:
