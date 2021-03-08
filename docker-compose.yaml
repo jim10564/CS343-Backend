@@ -88,6 +88,15 @@ services:
       # And that service listens on port "3000".
       SUT_BASE_URL: http://backend:3000/v0
 
+      # The test-runner needs acces to the SUT's database so that it
+      # can reset it between tests.
+      #
+      # WARNING: Do not point this at a production database. You will
+      # lose data.
+      SUT_MONGO_URL: mongodb://mongo
+      SUT_MONGO_DATABASE: items
+      SUT_MONGO_COLLECTION: items
+
       # Give each unit test extra time since they must send
       # HTTP requests on a possibly slow development system.
       # If your tests are experiencing timeouts, increase this number.

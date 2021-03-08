@@ -24,8 +24,8 @@ ENV NODE_ENV=production
 CMD [ "node", "index.js" ]
 
 # Install dependencies.
-COPY ./src/package*.json /app/
-RUN npm install
+COPY ./src/package.json ./src/yarn.lock /app/
+RUN yarn install
 
 # Install our server code.
 COPY ./src /app/
