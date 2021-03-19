@@ -2,8 +2,7 @@
 
 # NODE_IMAGE is passed when building the container. That way we don't hardcode
 # the image or its version that this container is based on.
-ARG NODE_IMAGE
-FROM ${NODE_IMAGE}
+FROM node:14-alpine
 
 # /app will hold our application. Create it and make it our working directory.
 WORKDIR /app
