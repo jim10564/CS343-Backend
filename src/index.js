@@ -1,3 +1,7 @@
+/**
+ * index.js is the entrypoint. It creates and starts the server.
+ */
+
 // Load builtin libraries.
 const http = require('http');
 const path = require('path');
@@ -37,7 +41,11 @@ app.use(
     validateRequests: true,
 
     // Validate responses.
-    validateResponses: true,
+    // If we validate responses, and a response is invalid, then the client
+    // receives an error message that obscures the orignal (although invalid)
+    // response. This makes debugging the response more difficult. Instead,
+    // validate responses in tests ran as a client.
+    validateResponses: false,
 
     // Use x-eov-* and operationId in openapi.yaml to define routes.
     // They are relative to this dierectory.

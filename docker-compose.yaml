@@ -4,26 +4,66 @@ services:
   # Backend is the service we are developing in this project.
   # It is the service under test (SUT).
   backend:
+
+    # The image it creates has a long tag. Why?
+    # First, we have to encode the location of the container registry ...
+    #
+    #    registry.gitlab.com/librefoodpantry/training/spikeathons/winter-2021/stoney-manage-items
+    #
+    # Second, the name of the component ...
+    #
+    #    backend
+    #
     image: registry.gitlab.com/librefoodpantry/training/spikeathons/winter-2021/stoney-manage-items/backend
+
+    # Here's how to build the image.
     build:
+      # Find the Dockerfile and all the other files needed in
+      # the same directory as this file.
       context: .
       args:
+        # Pass the version of node to base the image on.
         NODE_IMAGE: node:14-alpine
+
+    # This image, as an ExpressJS server, listens on port 3000.
+    # Expose this port so other containers on the same network to
+    # contact this service.
+    #
+    # In particular, the test-runner will use this port to test
+    # this service.
     expose:
       - 3000
+
+    # Map port 10001 on localhost to port 3000 on this service.
+    # This allows us to manually test this service.
     ports:
       - 10001:3000
+
     environment:
+      # URL by which this service is accessed.
       HOST_BASE_URL: http://localhost:10001/v0
+
+      # Mongo connection string.
       MONGO_URI: mongodb://mongo
+
+      # Set development for more debug messages.
+      # Comment out for production, and then rebuild the image.
+      NODE_ENV: development
+
+    # Attach this service to the test-network for testing.
     networks:
       - test-network
+
+    # This service can't run without its database.
     depends_on:
       - mongo
+
 
   # This is the database used by the backend.
   mongo:
     image: mongo:4
+
+    # Attach this service to the test-network so the backend can access it.
     networks:
       - test-network
 
@@ -33,16 +73,29 @@ services:
   test-runner:
 
     build:
+      # Find the Dockerfile and other files for building test-runner in
+      # the following location.
       context: ./testing/test-runner
+
+      # Pass the version of NodeJS to base the test-runner on.
+      # It should probably be the same version as backend.
       args:
         NODE_IMAGE: node:14-alpine
 
     environment:
-
       # The SUT will be accessed from inside the Docker network.
       # So we use "backend" as the server name, not "localhost".
       # And that service listens on port "3000".
       SUT_BASE_URL: http://backend:3000/v0
+
+      # The test-runner needs acces to the SUT's database so that it
+      # can reset it between tests.
+      #
+      # WARNING: Do not point this at a production database. You will
+      # lose data.
+      SUT_MONGO_URL: mongodb://mongo
+      SUT_MONGO_DATABASE: items
+      SUT_MONGO_COLLECTION: items
 
       # Give each unit test extra time since they must send
       # HTTP requests on a possibly slow development system.
@@ -50,7 +103,6 @@ services:
       TEST_TIMEOUT_MS: 5000
 
     volumes:
-
       # Mount the unit tests.
       - type: bind
         source: ./testing/tests
@@ -63,11 +115,14 @@ services:
         target: /app/openapi.yaml
         read_only: true
 
+    # Attach test-runner to the test-network so it can access the backend.
     networks:
       - test-network
 
+    # The test-runner depends on the backend; otherwise, what would it test?
     depends_on:
       - backend
+
 
   # Command to manage NodeJS dependencies.
   #   Run from the root of the project.
@@ -83,5 +138,7 @@ services:
         target: /workdir
     working_dir: /workdir
 
+
+# Define the networks.
 networks:
   test-network:

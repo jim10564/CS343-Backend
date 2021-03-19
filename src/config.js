@@ -1,3 +1,13 @@
+/**
+ * config.js supplies configuration to the rest of the system.
+ * It pulls some of its values from environment variables, and sets defaults
+ * values when they are not provided.
+ *
+ * Example Usage:
+ *    const config = require("./config.js");
+ *    const rootDirectory = config.ROOT_DIR;
+ */
+
 // Load path, a builtin library for manipulating file paths.
 const path = require('path');
 
