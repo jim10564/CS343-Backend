@@ -22,15 +22,6 @@ services:
       # the same directory as this file.
       context: .
 
-    # This image, as an ExpressJS server, listens on port 3000.
-    # Expose this port so other containers on the same network to
-    # contact this service.
-    #
-    # In particular, the test-runner will use this port to test
-    # this service.
-    expose:
-      - 3000
-
     # Map port 10001 on localhost to port 3000 on this service.
     # This allows us to manually test this service.
     ports:
