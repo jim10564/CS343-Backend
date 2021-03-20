@@ -1,125 +1,150 @@
-# org.librefoodpantry.bnm.inventory.items.backend
-
-Provides a backend REST API server for managing items in a larger inventory system.
+# Manage Items Backend REST API Server
 
 > IMPORTANT: This project is not intended for production environments.
 > It was built as an educational exercise and is intended to serve as an educational
 > example.
 
-## Using this image
+Provides a backend REST API server for managing items in a larger inventory system.
 
-> ASPIRATIONAL: This section is aspirational. That means things probably don't work
-> exactly as described. This section is intended to describe how we expect the image
-> to be consumed once it is actually delivered to a container registry.
+src/openapi.yaml contains the specification for the Manage Items API.
 
-To run an instance, let's assume you have a MongoDB container named mongo-for-backend
-running on network named network.mongo-for-backend. Let's also assume that the backend
-image is in the container registry `registry.gitlab.com/librefoodpantry/training/spikeathons/winter-2021/stoney-manage-items/backend`.
-Then the following command would deploy a backend container in your Docker environment
-on the same network as the MongoDB container, and the service would be available outside
-the docker environment on the host machine at <http://localhost:10001/v0>
+## 1. Use via Docker
+
+Make a directory to persist backend data.
+
+```bash
+mkdir data
+```
+
+Run a MongoDB instance.
+
+```bash
+docker run --name backend-database --detach -v "$PWD/data:/data/db" mongo:4
+```
+
+Run backend server.
 
 ```bash
 docker run \
-    --port="10001:3000" \
-    -e HOST_BASE_URL=http://localhost:10001/v0 \
-    -e MONGO_URI=mongodb://mongo-for-backend \
-    --network=network.mongo-for-backend \
-    registry.gitlab.com/librefoodpantry/training/spikeathons/winter-2021/stoney-manage-items/backend
+  --name backend \
+  --detach \
+  -p 10001:3000 \
+  -e HOST_BASE_URL=http://localhost:10001/v0 \
+  -e MONGO_URI=mongodb://backend-database \
+  registry.gitlab.com/librefoodpantry/training/spikeathons/winter-2021/stoney-manage-items/backend:latest
 ```
 
-Here is a docker-compose file that demonstrates the same.
+Now the API documentation is available at http://localhost:10001/api-docs and the service is available at http://localhost:10001/v0/items .
+
+## 2. Use via Docker Compose
+
+Create the following docker-compose.yaml file.
 
 ```yaml
 version: "3.8"
 services:
+
   backend:
-    image: registry.gitlab.com/librefoodpantry/training/spikeathons/winter-2021/stoney-manage-items/backend
+    image: registry.gitlab.com/librefoodpantry/training/spikeathons/winter-2021/stoney-manage-items/backend:latest
     ports:
       - 10001:3000
     environment:
       HOST_BASE_URL: http://localhost:10001/v0
-      MONGO_URI: mongodb://mongo-for-backend
+      MONGO_URI: mongodb://backend-database
     networks:
-      - network.mongo-for-backend
+      - backend-network
     depends_on:
-      - mongo-for-backend
+      - backend-database
 
-  mongo-for-backend:
+  backend-database:
     image: mongo:4
     networks:
-      - network.mongo-for-backend
+      - backend-network
+    volumes:
+      # Persistence
+      - type: bind
+        source: ./data/backend-database
+        target: /data/db
 
 networks:
-  network.mongo-for-backend:
+  backend-network:
 ```
 
-## Environment Variables
+Make the directory where the backend database will persist its data.
+
+```bash
+mkdir -p data/backend-database
+```
+
+Start.
+
+```bash
+docker-compose up --detach
+```
+
+Stop.
+
+```bash
+docker-compose down
+```
+
+## 3. Environment Variables
 
 * HOST_BASE_URL - The URL used to access the service from outside the Docker environment.
 * MONGO_URI - The MongoDB connection string.
 
-## Developer Quick Start
+## 4. Development
 
-> REAL: This section is real. Things should work. If not, let someone know.
-
-Prerequisites
-
-* Git
-* Docker
-* Bash (or a bash-like shell)
-
-Use docker-compose and docker to build, run, and test the services in this project.
-
-Here is a typical sequence to build, run, and test the backend (a.k.a. the service under test, or SUT).
+Build.
 
 ```bash
-docker-compose down --remove-orphans --volumes  # stop and remove anything from a previous run
-docker-compose build                            # build all the images
-docker-compose up --detach backend              # start backend and its dependencies
-docker-compose run --rm test-runner             # run the tests
+docker-compose build
 ```
 
-This sequence is so common that we put it into a bash script.
+Run.
 
 ```bash
-./dev test-sut
+docker-compose up --detach backend
 ```
 
-You can run any function as a subcommand of `./dev`. Do read `./dev` to learn
-what else you can do with it.
+The service is available at http://localhost:10001/v0/items .
 
-Note that the SUT is still running. With it running, you can manually test it by
-pointing your browser to <http://localhost:10001/api-docs/>.
-
-To stop and remove the running containers...
-
-```
-./dev down
-```
-
-### Configuration and Dependencies
-
-`docker-compose.yaml` contains the configuration for building docker images
-and configuring containers to run together, including configuration of the
-test environment.
-
-`src/package.json` contains JavaScript dependencies used to implement the
-backend REST API server. Use `docker-compose run --rm npm` (or `./dev npm`)
-to manage them. For example,
+Test.
 
 ```bash
-cd src
-../dev npm install     # Install into node_modules the depenencies listed in package.json
-../dev npm outdated    # Check which packages are outdated and by how much
-../dev npm update      # Update all packages to the most current version within the same major version.
-../dev npm install somepackage@latest   # Upgrade somepackage to the most current major version.
+docker-compose run --rm test-runner
 ```
 
-`src/openapi.yaml` contains the OpenAPI specification of the REST API.
-It contains metadata related to the API including a version number.
+Stop.
 
-`src/config.js` contains configuration specific to the implementation of the backend.
+```bash
+docker-compose down
+```
 
-`testing/test-runner/package.json` contains the dependencies for the test-runner. Again
-use `./dev npm` to manage them.
+### 4.1. Dependencies
+
+Dependencies are managed in a few different files.
+
+* Dockerfile - Base image for backend.
+* src/package.json - 3rd party JavaScript libraries for backend.
+* testing/test-runner/Dockerfile - Base image for test-runner.
+* testing/test-runner/package.json - 3rd party JavaScript libraries for test-runner.
+
+Use [yarn](https://yarnpkg.com/) to manage dependencies package.json. You can run yarn using the nodejs docker image.
+
+```bash
+docker run -it --rm -v "$PWD:/w" -w /w node:14-alpine yarn
+```
+
+For example, to check if there are any outdated packages in test-runner...
+
+```bash
+cd testing/test-runner
+docker run -it --rm -v "$PWD:/w" -w /w node:14-alpine yarn outdated
+```
+
+### 4.2. Configuration
+
+* `docker-compose.yaml` - Configures the test/development environment.
+* `src/openapi.yaml` - Contains the OpenAPI specification of the REST API. It contains metadata related to the API including a version number.
+* `src/config.js` - Contains configuration specific to the implementation of the backend.
