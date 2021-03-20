@@ -4,4 +4,4 @@ WORKDIR /app
 COPY ./package.json ./yarn.lock /app/
 RUN yarn install
 COPY . /app/
-CMD [ "node", "./node_modules/mocha/bin/mocha" ]
+CMD [ "node", "./node_modules/mocha/bin/mocha", "-C" ]
