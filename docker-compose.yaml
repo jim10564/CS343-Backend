@@ -21,9 +21,6 @@ services:
       # Find the Dockerfile and all the other files needed in
       # the same directory as this file.
       context: .
-      args:
-        # Pass the version of node to base the image on.
-        NODE_IMAGE: node:14-alpine
 
     # This image, as an ExpressJS server, listens on port 3000.
     # Expose this port so other containers on the same network to
@@ -76,11 +73,6 @@ services:
       # Find the Dockerfile and other files for building test-runner in
       # the following location.
       context: ./testing/test-runner
-
-      # Pass the version of NodeJS to base the test-runner on.
-      # It should probably be the same version as backend.
-      args:
-        NODE_IMAGE: node:14-alpine
 
     environment:
       # The SUT will be accessed from inside the Docker network.
