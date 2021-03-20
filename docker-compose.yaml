@@ -116,21 +116,6 @@ services:
       - backend
 
 
-  # Command to manage NodeJS dependencies.
-  #   Run from the root of the project.
-  #     docker-compose run --rm npm
-  #   Run from a directory other than the root of the project.
-  #     docker-compose -f ../docker-compose.yaml --rm npm
-  npm:
-    image: node:14-alpine
-    entrypoint: [ "npm" ]
-    volumes:
-      - type: bind
-        source: ${PWD}
-        target: /workdir
-    working_dir: /workdir
-
-
 # Define the networks.
 networks:
   test-network:
