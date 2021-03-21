@@ -1,7 +1,7 @@
 build:
   only:
-    refs:
-      - $CI_DEFAULT_BRANCH
+    variables:
+      - $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   image: docker:19.03.12
   stage: build
   services:
