@@ -53,9 +53,6 @@ app.use(
   }),
 );
 
-// Serve interactive documentation.
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(config.OPENAPI_SCHEMA));
-
 // Create an Express error handler
 app.use((err, req, res, next) => {
   // Dump errors to server logs (console).
