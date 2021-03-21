@@ -163,12 +163,12 @@ describe("/items", function() {
 
     context("passing bad data", function() {
       it("returns 400", async function() {
-        expect(createItem({"illegal": "field"}))
+        await expect(createItem({"illegal": "field"}))
           .to.eventually.be.rejected
           .with.nested.property("response.status", 400);
       });
       it("matches openapi.yaml", async function() {
-        expect(createItem({"illegal": "field"}))
+        await expect(createItem({"illegal": "field"}))
           .to.eventually.be.rejected
           .with.property("response").to.matchApiSchema();
       });
@@ -176,12 +176,12 @@ describe("/items", function() {
 
     context("passing no data", function() {
       it("returns 400", async function() {
-        expect(createItem({}))
+        await expect(createItem({}))
           .to.eventually.be.rejected
           .with.nested.property("response.status", 400);
       });
       it("matches openapi.yaml", async function() {
-        expect(createItem({}))
+        await expect(createItem({}))
           .to.eventually.be.rejected
           .with.property("response").to.matchApiSchema();
       });
