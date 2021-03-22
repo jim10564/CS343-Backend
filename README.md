@@ -92,30 +92,40 @@ Start it again with the same command line options as before and its state will p
 
 ## 5. Development
 
-Build and run.
+Build the backend-server.
 
 ```bash
-docker-compose -f docker-compose.yaml -f docker-compose.build.yaml -f docker-compose.test.yaml up --build --detach
+# ci/build
+docker-compose -f docker-compose.yaml -f docker-compose.build.yaml build --pull backend-server
 ```
 
-The service is available at http://localhost:10001/v0/items outside Docker, and at http://backend-server:3000 inside Docker.
-
-Test, after running.
+Build the test-runner.
 
 ```bash
-docker-compose -f docker-compose.yaml -f docker-compose.build.yaml -f docker-compose.test.yaml run test-runner
+# ci/build-test
+docker-compose -f docker-compose.yaml -f docker-compose.build.yaml -f docker-compose.test.yaml build --pull test-runner
 ```
 
-Stop.
+Run the backend-server and its database.
 
 ```bash
+# ci/up
+docker-compose -f docker-compose.yaml -f docker-compose.build.yaml -f docker-compose.test.yaml up --detach backend-server
+```
+
+Test the running backend-server.
+
+```bash
+# ci/test
+docker-compose -f docker-compose.yaml -f docker-compose.build.yaml -f docker-compose.test.yaml run --rm test-runner
+```
+
+Stop the backend-server and its database.
+
+```bash
+# ci/down
 docker-compose -f docker-compose.yaml -f docker-compose.build.yaml -f docker-compose.test.yaml down
 ```
-
-> Tip:
->
-> Consider creating scripts or aliases to simplify running the above.
-
 
 ### 5.1. Dependencies
 
