@@ -1,0 +1,25 @@
+version: "3.3"
+services:
+
+  test-runner:
+    image: test-runner
+    build: ./testing/test-runner
+    environment:
+      SUT_BASE_URL: http://backend-server:3000/v0
+      SUT_MONGO_URL: mongodb://backend-database
+      SUT_MONGO_DATABASE: items
+      SUT_MONGO_COLLECTION: items
+      TEST_TIMEOUT_MS: 5000
+    volumes:
+      - type: bind
+        source: ./testing/tests
+        target: /app/test
+        read_only: true
+      - type: bind
+        source: ./src/openapi.yaml
+        target: /openapi.yaml
+        read_only: true
+    networks:
+      - backend-network
+    depends_on:
+      - backend-server
