@@ -17,7 +17,7 @@ build:
     - apk add docker-compose
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker-compose -f docker-compose.yaml -f docker-compose.build.yaml build --pull backend-server
+    - ci/build
     - docker tag backend-server $CONTAINER_TEST_IMAGE
     - docker push $CONTAINER_TEST_IMAGE
 
@@ -29,9 +29,10 @@ test:
   script:
     - docker pull $CONTAINER_TEST_IMAGE
     - docker tag $CONTAINER_TEST_IMAGE backend-server
-    - docker-compose -f docker-compose.yaml -f docker-compose.build.yaml -f docker-compose.test.yaml build --pull test-runner
-    - docker-compose -f docker-compose.yaml -f docker-compose.build.yaml -f docker-compose.test.yaml up --detach backend-server
-    - docker-compose -f docker-compose.yaml -f docker-compose.build.yaml -f docker-compose.test.yaml run --rm test-runner
+    - ci/build-test
+    - ci/up
+    - ci/test
+    - ci/down
 
 release:
   stage: release
