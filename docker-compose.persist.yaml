@@ -1,0 +1,8 @@
+version: "3.8"
+services:
+
+  backend-database:
+    volumes:
+      - type: bind
+        source: ./backend-dataase
+        target: /data/db
