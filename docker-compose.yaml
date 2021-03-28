@@ -3,6 +3,7 @@ services:
 
   backend-server:
     image: registry.gitlab.com/librefoodpantry/training/spikeathons/winter-2021/stoney-manage-items/backend:latest
+    init: true
     ports:
       - 10001:3000
     environment:
