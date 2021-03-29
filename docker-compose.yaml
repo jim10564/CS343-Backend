@@ -3,7 +3,9 @@ services:
 
   backend-server:
     image: registry.gitlab.com/librefoodpantry/training/spikeathons/winter-2021/stoney-manage-items/backend:latest
-    init: true
+    ## init doesn't exist until docker-compose version 3.7
+    ## but we are restricted to 3.3 by GitHub CI (for now)
+    # init: true
     ports:
       - 10001:3000
     environment:

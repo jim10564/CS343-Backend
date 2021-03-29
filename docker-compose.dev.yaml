@@ -4,7 +4,9 @@ services:
   backend-server:
     image: backend-server
     build: .
-    init: true
+    ## init doesn't exist until docker-compose version 3.7
+    ## but we are restricted to 3.3 by GitHub CI (for now)
+    # init: true
     ports:
       - 10001:3000
     environment:
