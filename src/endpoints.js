@@ -44,7 +44,7 @@ class Endpoints {
    * See https://expressjs.com/en/4x/api.html for documentation on
    * the Request and Response objects passed.
    */
- static async listItems(request, response) {
+  static async listItems(request, response) {
     try {
       const items = await Items.getAll();
       response.status(200).json(items);
@@ -57,6 +57,30 @@ class Endpoints {
       });
     }
   }
+
+  static async viewItem(request, response) {
+    try {
+      const id = request.params.id;
+      const item = await Items.getOne(id);
+      if (item !== null) {
+        response.status(200).json(item);
+      } else {
+        response.status(404).json({
+          status: 404,
+          error: "Item not found",
+          message: "ID does not exist"
+        })
+      }
+    } catch (e) {
+      logger.error("Endpoints.listItem", e);
+      response.status(500).json({
+        status: 500,
+        error: "Internal Server Error",
+        message: "See server's logs."
+      });
+    }
+  }
+
 }
 
 module.exports = Endpoints;

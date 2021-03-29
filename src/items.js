@@ -5,6 +5,7 @@
  */
 const Database = require("./database");
 const logger = require("./logger");
+const { ObjectID } = require("mongodb");
 
 
 class Items {
@@ -27,11 +28,29 @@ class Items {
     }
   }
 
+  static async getOne(id) {
+    try {
+      const itemsCollection = await getItemsCollection();
+      let item = await itemsCollection.findOne({ _id: ObjectID(id) });
+      if (item !== null) {
+        item._id = item._id.toHexString();
+      }
+      return item;
+    } catch (e) {
+      logger.error("ItemsAccessObject.getAll", e);
+      throw {
+        code: 500,
+        error: "Internal Server Error",
+        caused_by: e
+      };
+    }
+  }
+
   static async create(itemData) {
     try {
       const itemsCollection = await getItemsCollection();
       const result = await itemsCollection.insertOne(itemData);
-      let item = await itemsCollection.findOne({_id: result.insertedId});
+      let item = await itemsCollection.findOne({ _id: result.insertedId });
       item._id = item._id.toHexString();
       return item;
     } catch (e) {
@@ -45,11 +64,9 @@ class Items {
   }
 }
 
-
 async function getItemsCollection() {
   const database = await Database.get();
   return database.db("items").collection("items");
 }
-
 
 module.exports = Items;

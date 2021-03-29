@@ -72,13 +72,13 @@ const mongodb = require('mongodb');
 ////////////////////////////////////////////////////////////////////////////////
 // Helper functions that manipulate the SUT
 
-const listItems = async function() {
+const listItems = async function () {
   return axios.get("/items");
 }
 
-const createItem = async function(data) {
-  if (data === undefined){
-    data = {"name": "clown"};
+const createItem = async function (data) {
+  if (data === undefined) {
+    data = { "name": "clown" };
   }
   if (data === null) {
     return axios.post("/items");
@@ -87,6 +87,9 @@ const createItem = async function(data) {
   }
 }
 
+const viewItem = async function (id) {
+  return axios.get("/items/" + id);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Configure setup and teardown procedures that all tests share.
@@ -98,12 +101,12 @@ const dbClient = new mongodb.MongoClient(
 
 
 // Connect to the database before running any tests.
-before(async function() {
+before(async function () {
   await dbClient.connect();
 });
 
 // Empty the items collection before each test.
-beforeEach(async function() {
+beforeEach(async function () {
   try {
     await dbClient.db(SUT_MONGO_DATABASE).dropCollection(SUT_MONGO_COLLECTION);
   } catch (e) {
@@ -112,7 +115,7 @@ beforeEach(async function() {
 });
 
 // Close the database connection when all the tests complete.
-after(async function() {
+after(async function () {
   await dbClient.close();
 });
 
@@ -120,38 +123,38 @@ after(async function() {
 ////////////////////////////////////////////////////////////////////////////////
 // Define the tests.
 
-describe("/items", function() {
+describe("/items", function () {
   this.timeout(TEST_TIMEOUT_MS);
 
-  describe("listItems (GET /items)", function() {
-    it("response matches openapi.yaml", async function() {
+  describe("listItems (GET /items)", function () {
+    it("response matches openapi.yaml", async function () {
       const response = await listItems();
       expect(response).to.matchApiSchema();
     });
   });
 
-  describe("createItem (POST /items)", function() {
-    context("passing good data", function() {
-      it("returns 201", async function() {
+  describe("createItem (POST /items)", function () {
+    context("passing good data", function () {
+      it("returns 201", async function () {
         const response = await createItem();
         expect(response.status).to.equal(201);
       });
-      it("response matches openapi.yaml", async function() {
+      it("response matches openapi.yaml", async function () {
         const response = await createItem();
         expect(response).to.matchApiSchema();
       });
-      it("returns a new item with the same name", async function() {
-        const response = await createItem({"name": "turkey"});
+      it("returns a new item with the same name", async function () {
+        const response = await createItem({ "name": "turkey" });
         expect(response.data.name).to.equal("turkey");
       });
       it("returns a location haeader containing the same id as the returned item",
-      async function() {
-        const response = await createItem();
-        const parts = response.headers.location.split("/");
-        const id = parts[parts.length-1];
-        expect(response.data._id).to.equal(id);
-      });
-      it("increases the number of items by one", async function() {
+        async function () {
+          const response = await createItem();
+          const parts = response.headers.location.split("/");
+          const id = parts[parts.length - 1];
+          expect(response.data._id).to.equal(id);
+        });
+      it("increases the number of items by one", async function () {
         const beforeResponse = await listItems();
         const beforeLength = beforeResponse.data.length;
         await createItem();
@@ -161,27 +164,92 @@ describe("/items", function() {
       });
     });
 
-    context("passing bad data", function() {
-      it("returns 400", async function() {
-        await expect(createItem({"illegal": "field"}))
+    context("passing bad data", function () {
+      it("returns 400", async function () {
+        await expect(createItem({ "illegal": "field" }))
           .to.eventually.be.rejected
           .with.nested.property("response.status", 400);
       });
-      it("matches openapi.yaml", async function() {
-        await expect(createItem({"illegal": "field"}))
+      it("matches openapi.yaml", async function () {
+        await expect(createItem({ "illegal": "field" }))
           .to.eventually.be.rejected
           .with.property("response").to.matchApiSchema();
       });
     });
 
-    context("passing no data", function() {
-      it("returns 400", async function() {
+    context("passing no data", function () {
+      it("returns 400", async function () {
         await expect(createItem({}))
           .to.eventually.be.rejected
           .with.nested.property("response.status", 400);
       });
-      it("matches openapi.yaml", async function() {
+      it("matches openapi.yaml", async function () {
         await expect(createItem({}))
+          .to.eventually.be.rejected
+          .with.property("response").to.matchApiSchema();
+      });
+    });
+  });
+
+  describe("viewItem (GET /items/{id})", function () {
+    context("id exists", function () {
+
+      async function viewExistingItem() {
+        let createResponse = await createItem({ name: "soup" });
+        let id = createResponse.data._id;
+        return await viewItem(id);
+      }
+
+      it("returns 200", async function () {
+        await expect(viewExistingItem())
+          .to.eventually.have.property("status", 200);
+      });
+
+      it("returns the item", async function () {
+        let createResponse = await createItem({ name: "soup" });
+        let id = createResponse.data._id;
+        let res = await viewItem(id);
+        let item = res.data;
+        expect(item).to.deep.equal({ name: "soup", _id: id });
+      });
+
+      it("meets spec", async function () {
+        await expect(viewExistingItem())
+          .to.eventually.matchApiSchema();
+      });
+    });
+
+    context("id does not exist", function () {
+      async function viewNonExistentItem() {
+        return viewItem("123456789012345678901234");
+      }
+å
+      it("returns 404", async function () {
+        await expect(viewNonExistentItem())
+          .to.eventually.be.rejected
+          .with.nested.property("response.status", 404);
+      });
+
+      it("meets spec", async function () {
+        await expect(viewNonExistentItem())
+          .to.eventually.be.rejected
+          .with.property("response").to.matchApiSchema();
+      });
+    });
+
+    context("id is malformed", function () {
+      async function viewItemUsingMalformedID() {
+        return viewItem("malformed");
+      }
+
+      it("returns 400", async function () {
+        expect(viewItemUsingMalformedID())
+          .to.eventually.be.rejected
+          .with.nested.property("response.status", 400);
+      });
+
+      it("matches spec", async function () {
+        expect(viewItemUsingMalformedID())
           .to.eventually.be.rejected
           .with.property("response").to.matchApiSchema();
       });
