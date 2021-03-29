@@ -223,7 +223,7 @@ describe("/items", function () {
       async function viewNonExistentItem() {
         return viewItem("123456789012345678901234");
       }
-å
+
       it("returns 404", async function () {
         await expect(viewNonExistentItem())
           .to.eventually.be.rejected
