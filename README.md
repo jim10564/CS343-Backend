@@ -8,42 +8,15 @@ Provides a backend REST API server for managing items in a larger inventory syst
 
 src/openapi.yaml contains the specification for the Manage Items API.
 
-## 1. Use via Docker
-
-```bash
-mkdir -p data
-```
-
-Run a MongoDB as the backend-database.
-
-```bash
-docker run --name backend-database --detach -v "$PWD/data:/data/db" mongo:4
-```
-
-Run the backend-server.
-
-```bash
-docker run \
-  --name backend-server \
-  --detach \
-  -p 10001:3000 \
-  -e HOST_BASE_URL=http://localhost:10001/v0 \
-  -e MONGO_URI=mongodb://backend-database \
-  registry.gitlab.com/librefoodpantry/training/spikeathons/winter-2021/stoney-manage-items/backend:latest
-```
-
-The service is available at http://localhost:10001/v0/items outside Docker, and at http://backend-server:3000 inside Docker.
-
-Stop.
-
-```bash
-docker stop backend-server
-docker stop backend-database
-```
-
-## 2. Use via Docker Compose
+## 1. Use
 
 Download and inspect/configure `docker-compose.yaml`.
+
+Make database directory. By default `./backend-database`.
+
+```bash
+mkdir backend-database
+```
 
 Start.
 
@@ -51,39 +24,22 @@ Start.
 docker-compose up --detach
 ```
 
+By default the service is now available at `http://localhost:10001/v0/items`
+
+
+See src/openapi.yaml to learn what endpoints are available.
+
 Stop.
 
 ```bash
 docker-compose down
 ```
 
-## 3. Use via Docker Compose with Persistence
-
-Download and inspect/configure `docker-compose.yaml` and `docker-compose.persist.yaml`.
-
-Create the directory listed as the source in `docker-compose.persist.yaml` .
+To reset the database, delete the contents of `./backend-database`
 
 ```bash
-mkdir -p backend-database
+rm -rf ./backend-database
 ```
-
-Start.
-
-```bash
-docker-compose -f docker-compose.yaml -f docker-compose.persist.yaml up --detach
-```
-
-The service is available at http://localhost:10001/v0/items outside Docker, and at http://backend-server:3000 inside Docker. Its data is stored in ./backend-database.
-
-
-Stop.
-
-```bash
-docker-compose -f docker-compose.yaml -f docker-compose.persist.yaml down
-```
-
-Start it again with the same command line options as before and its state will pick up where it left off.
-
 
 ## 4. Environment Variables
 
@@ -103,28 +59,28 @@ Build the test-runner.
 
 ```bash
 # ci/build-test
-docker-compose -f docker-compose.yaml -f docker-compose.build.yaml -f docker-compose.test.yaml build --pull test-runner
+docker-compose -f docker-compose.dev.yaml build --pull test-runner
 ```
 
 Run the backend-server and its database.
 
 ```bash
 # ci/up
-docker-compose -f docker-compose.yaml -f docker-compose.build.yaml -f docker-compose.test.yaml up --detach backend-server
+docker-compose -f docker-compose.dev.yaml up --detach backend-server
 ```
 
 Test the running backend-server.
 
 ```bash
 # ci/test
-docker-compose -f docker-compose.yaml -f docker-compose.build.yaml -f docker-compose.test.yaml run --rm test-runner
+docker-compose -f docker-compose.dev.yaml run --rm test-runner
 ```
 
 Stop the backend-server and its database.
 
 ```bash
 # ci/down
-docker-compose -f docker-compose.yaml -f docker-compose.build.yaml -f docker-compose.test.yaml down
+docker-compose -f docker-compose.dev.yaml down
 ```
 
 ### 5.1. Dependencies

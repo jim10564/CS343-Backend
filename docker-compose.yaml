@@ -18,6 +18,10 @@ services:
     image: mongo:4
     networks:
       - backend-network
+    volumes:
+      - type: bind
+        source: ./backend-database
+        target: /data/db
 
 networks:
   backend-network:

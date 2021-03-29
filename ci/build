@@ -1,1 +1,1 @@
-docker-compose -f docker-compose.yaml -f docker-compose.build.yaml build --pull backend-server
+docker-compose -f docker-compose.dev.yaml build --pull backend-server
