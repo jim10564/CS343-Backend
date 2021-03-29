@@ -19,7 +19,7 @@ class Items {
       return items;
     } catch (e) {
       logger.error("ItemsAccessObject.getAll", e);
-      throw new {
+      throw {
         code: 500,
         error: "Internal Server Error",
         caused_by: e
@@ -36,7 +36,7 @@ class Items {
       return item;
     } catch (e) {
       logger.error("ItemsAccessObject.create", e);
-      throw new {
+      throw {
         code: 500,
         error: "Internal Server Error",
         caused_by: e
