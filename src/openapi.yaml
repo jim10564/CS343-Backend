@@ -139,4 +139,4 @@ components:
               message:
                 type: string
               errorCode:
-                type: "string"
+                type: string
