@@ -15,7 +15,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ItemArray'
+                $ref: "#/components/schemas/ItemArray"
     post:
       x-eov-operation-handler: endpoints
       operationId: createItem
@@ -33,14 +33,14 @@ paths:
                 value:
                   name: Bread
             schema:
-              $ref: '#/components/schemas/ItemData'
+              $ref: "#/components/schemas/ItemData"
         required: true
       responses:
         "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Item'
+                $ref: "#/components/schemas/Item"
           description: Created.
           headers:
             Location:
@@ -53,18 +53,33 @@ paths:
                 type: string
               style: simple
         "400":
-          description: Bad requests
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/EovError'
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/ServerError"
 components:
+  responses:
+    NotFound:
+      description: The specified resource was found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/EovError"
+    BadRequest:
+      description: The request was malformed
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/EovError"
+    ServerError:
+      description: There was an error in the server.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/EovError"
   schemas:
     ItemData:
       description: Item data without an _id.
-      example: {
-        "name": "Canned tuna"
-      }
+      example: { "name": "Canned tuna" }
       type: object
       properties:
         name:
@@ -75,12 +90,9 @@ components:
       type: array
       nullable: false
       items:
-        $ref: '#/components/schemas/Item'
+        $ref: "#/components/schemas/Item"
     Item:
-      example: {
-        "name": "Canned tuna",
-        "_id": "0123456789aBcDeF01234567"
-      }
+      example: { "name": "Canned tuna", "_id": "0123456789aBcDeF01234567" }
       properties:
         _id:
           $ref: "#/components/schemas/MongoId"
@@ -100,7 +112,8 @@ components:
       pattern: \S+
       type: string
     MongoId:
-      description: Unique identifier consisting of a 24 digit hexidecimal values (a
+      description:
+        Unique identifier consisting of a 24 digit hexidecimal values (a
         MongoDB stingified ObjectID)
       example: 0123456789aBcDeF01234567
       maxLength: 24
@@ -111,21 +124,23 @@ components:
     EovError:
       description: Not Acceptable
       type: object
-      example: {
-        "message": ".response should have required property 'name', .response should have required property 'id'",
-        "errors": [
-          {
-            "path": ".response.name",
-            "message": "should have required property 'name'",
-            "errorCode": "required.openapi.validation"
-          },
-          {
-            "path": ".response.id",
-            "message": "should have required property 'id'",
-            "errorCode": "required.openapi.validation"
-          }
-        ]
-      }
+      example:
+        {
+          "message": ".response should have required property 'name', .response should have required property 'id'",
+          "errors":
+            [
+              {
+                "path": ".response.name",
+                "message": "should have required property 'name'",
+                "errorCode": "required.openapi.validation",
+              },
+              {
+                "path": ".response.id",
+                "message": "should have required property 'id'",
+                "errorCode": "required.openapi.validation",
+              },
+            ],
+        }
       properties:
         message:
           type: string
