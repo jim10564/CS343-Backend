@@ -6,7 +6,7 @@ services:
     build: .
     ## init doesn't exist until docker-compose version 3.7
     ## but we are restricted to 3.3 by GitHub CI (for now)
-    # init: true
+    init: true
     ports:
       - 10001:3000
     environment:
@@ -37,8 +37,8 @@ services:
         target: /app/test
         read_only: true
       - type: bind
-        source: ./src/openapi.yaml
-        target: /openapi.yaml
+        source: ./src/
+        target: /sut/
         read_only: true
     networks:
       - backend-network

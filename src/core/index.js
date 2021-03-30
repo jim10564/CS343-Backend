@@ -14,8 +14,8 @@ const bodyParser = require('body-parser');
 const swaggerUI = require('swagger-ui-express');
 
 // Load our libraries.
-const config = require('./config');
-const logger = require('./logger');
+const config = require('../core/config.js');
+const logger = require('../core/logger.js');
 
 // Create express app.
 const app = express();
@@ -49,7 +49,7 @@ app.use(
 
     // Use x-eov-* and operationId in openapi.yaml to define routes.
     // They are relative to this dierectory.
-    operationHandlers: path.join(__dirname),
+    operationHandlers: path.join(__dirname, '..'),
   }),
 );
 

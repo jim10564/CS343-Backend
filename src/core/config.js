@@ -34,7 +34,7 @@ function loadOpenApi(filePath) {
   const openapi = jsYaml.load(openapiYaml);
   return openapi;
 }
-config.OPENAPI_SCHEMA = loadOpenApi(path.join(config.ROOT_DIR, 'openapi.yaml'));
+config.OPENAPI_SCHEMA = loadOpenApi(path.join(config.ROOT_DIR, '..', 'openapi.yaml'));
 
 // Replace the URL in the OPENAPI_SCHEMA with HOST_BASE_URL
 // so the interactive documentation works properly.

@@ -10,4 +10,3 @@ docker*
 Docker*
 .gitlab-ci.yml
 ci/
-testing/

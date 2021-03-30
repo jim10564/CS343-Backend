@@ -1,0 +1,33 @@
+description: Not Acceptable
+type: object
+example:
+  {
+    "message": ".response should have required property 'name', .response should have required property 'id'",
+    "errors":
+      [
+        {
+          "path": ".response.name",
+          "message": "should have required property 'name'",
+          "errorCode": "required.openapi.validation",
+        },
+        {
+          "path": ".response.id",
+          "message": "should have required property 'id'",
+          "errorCode": "required.openapi.validation",
+        },
+      ],
+  }
+properties:
+  message:
+    type: string
+  errors:
+    type: array
+    items:
+      type: object
+      properties:
+        path:
+          type: string
+        message:
+          type: string
+        errorCode:
+          type: string

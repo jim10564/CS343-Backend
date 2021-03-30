@@ -1,0 +1,9 @@
+description:
+  Unique identifier consisting of a 24 digit hexidecimal values (a
+  MongoDB stingified ObjectID)
+example: 0123456789aBcDeF01234567
+maxLength: 24
+minLength: 24
+nullable: false
+pattern: ^[a-zA-Z0-9]+$
+type: string

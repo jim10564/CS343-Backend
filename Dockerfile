@@ -7,10 +7,6 @@ FROM node:14-alpine
 # /app will hold our application. Create it and make it our working directory.
 WORKDIR /app
 
-# Best practice: Don't run as root. Instead run as node (created in node image)
-RUN chown node:node /app
-USER node
-
 # ExpressJS listens on 3000 by default. Expose it.
 EXPOSE 3000
 
@@ -20,7 +16,7 @@ EXPOSE 3000
 ENV NODE_ENV=production
 
 # When ran, call node on index.js.
-CMD [ "node", "index.js" ]
+CMD [ "node", "core/index.js" ]
 
 # Install dependencies.
 COPY ./src/package.json ./src/yarn.lock /app/
@@ -28,3 +24,12 @@ RUN yarn install
 
 # Install our server code.
 COPY ./src /app/
+
+ADD https://gitlab.com/wne-csit-jackson/it450/spring2021/newexamples/api/-/archive/v0.1.0/api-v0.1.0.tar.gz /app
+RUN tar -zxvf /app/api-v0.1.0.tar.gz
+RUN rm /app/api-v0.1.0.tar.gz
+RUN mv /app/api-v0.1.0 /app/api
+
+# Best practice: Don't run as root. Instead run as node (created in node image)
+RUN chown -R node:node /app
+USER node

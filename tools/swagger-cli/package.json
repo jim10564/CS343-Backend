@@ -1,0 +1,9 @@
+{
+  "name": "swagger-bundler",
+  "version": "1.0.0",
+  "license": "GPL-3.0",
+  "private": true,
+  "dependencies": {
+    "swagger-cli": "^4.0.4"
+  }
+}
