@@ -1,0 +1,168 @@
+openapi: 3.0.3
+info:
+  title: ManageItems
+  version: 0.1.1
+paths:
+  /items:
+    get:
+      description: Get list of items.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemArray'
+    post:
+      description: Create a new item.
+      requestBody:
+        content:
+          application/json:
+            examples:
+              soup:
+                value:
+                  name: Soup
+              tuna:
+                value:
+                  name: Tuna
+              bread:
+                value:
+                  name: Bread
+            schema:
+              $ref: '#/components/schemas/ItemData'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+          description: Created.
+          headers:
+            Location:
+              description: URI of new item.
+              explode: false
+              required: true
+              schema:
+                minLength: 1
+                nullable: false
+                type: string
+              style: simple
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  '/items/{id}':
+    get:
+      description: View details of a single item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/MongoId'
+      responses:
+        '200':
+          description: Item found and returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+components:
+  responses:
+    BadRequest:
+      description: The request was malformed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EovError'
+    NotFound:
+      description: The specified resource was found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EovError'
+    ServerError:
+      description: There was an error in the server.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EovError'
+  schemas:
+    EovError:
+      description: Not Acceptable
+      type: object
+      example:
+        message: '.response should have required property ''name'', .response should have required property ''id'''
+        errors:
+          - path: .response.name
+            message: should have required property 'name'
+            errorCode: required.openapi.validation
+          - path: .response.id
+            message: should have required property 'id'
+            errorCode: required.openapi.validation
+      properties:
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+              message:
+                type: string
+              errorCode:
+                type: string
+    Item:
+      example:
+        name: Canned tuna
+        _id: 0123456789aBcDeF01234567
+      properties:
+        _id:
+          $ref: '#/components/schemas/MongoId'
+        name:
+          $ref: '#/components/schemas/ItemName'
+      required:
+        - _id
+        - name
+      type: object
+    ItemArray:
+      type: array
+      nullable: false
+      items:
+        $ref: '#/components/schemas/Item'
+    ItemData:
+      description: Item data without an _id.
+      example:
+        name: Canned tuna
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/ItemName'
+      required:
+        - name
+    ItemName:
+      description: Name of the item.
+      example: Canned tuna
+      maxLength: 128
+      minLength: 1
+      nullable: false
+      pattern: \S+
+      type: string
+    MongoId:
+      description: Unique identifier consisting of a 24 digit hexidecimal values (a MongoDB stingified ObjectID)
+      example: 0123456789aBcDeF01234567
+      maxLength: 24
+      minLength: 24
+      nullable: false
+      pattern: '^[a-zA-Z0-9]+$'
+      type: string
+

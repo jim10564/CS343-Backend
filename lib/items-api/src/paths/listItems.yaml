@@ -1,8 +1,0 @@
-description: Get list of items.
-responses:
-  "200":
-    description: OK
-    content:
-      application/json:
-        schema:
-          $ref: "../index.yaml#/components/schemas/ItemArray"

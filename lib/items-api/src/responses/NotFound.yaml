@@ -1,5 +1,0 @@
-description: The specified resource was found
-content:
-  application/json:
-    schema:
-      $ref: "../index.yaml#/components/schemas/EovError"

@@ -7,7 +7,7 @@ const config = {
   SERVER_PORT: 3000,
 
   ROOT_DIR: ROOT_DIR,
-  OPENAPI_FILE: path.join(ROOT_DIR, "lib", "items-api", "src", "index.yaml"),
+  OPENAPI_FILE: path.join(ROOT_DIR, "lib", "items-api.yaml"),
   ENDPOINTS_DIR: path.join(ROOT_DIR, "src", "endpoints"),
 };
 

@@ -33,8 +33,8 @@ services:
         target: /app/test
         read_only: true
       - type: bind
-        source: ../../lib/items-api
-        target: /app/items-api
+        source: ../../lib
+        target: /app/lib
         read_only: true
     networks:
       - backend-network

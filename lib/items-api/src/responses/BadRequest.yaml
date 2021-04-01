@@ -1,5 +1,0 @@
-description: The request was malformed
-content:
-  application/json:
-    schema:
-      $ref: "../index.yaml#/components/schemas/EovError"

@@ -1,6 +1,0 @@
-BadRequest:
-  $ref: "./BadRequest.yaml"
-NotFound:
-  $ref: "./NotFound.yaml"
-ServerError:
-  $ref: "./ServerError.yaml"
