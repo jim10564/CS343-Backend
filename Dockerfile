@@ -1,6 +1,6 @@
 FROM node:14-alpine as build
 WORKDIR /src
-COPY ./src/package.json ./src/yarn.lock .
+COPY ./src/package.json ./src/yarn.lock ./
 RUN yarn install
 
 FROM node:14-alpine
