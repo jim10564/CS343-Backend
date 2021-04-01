@@ -2,7 +2,7 @@ version: "3.3"
 services:
   backend-server:
     image: backend-server:dev
-    init: true
+    # init: true
     ports:
       - 10001:3000
     environment:
