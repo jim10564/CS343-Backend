@@ -1,0 +1,8 @@
+description: Item data without an _id.
+example: { "name": "Canned tuna" }
+type: object
+properties:
+  name:
+    $ref: "../index.yaml#/components/schemas/ItemName"
+required:
+  - name

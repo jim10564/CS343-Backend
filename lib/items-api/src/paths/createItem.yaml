@@ -1,0 +1,38 @@
+description: Create a new item.
+requestBody:
+  content:
+    application/json:
+      examples:
+        soup:
+          value:
+            name: Soup
+        tuna:
+          value:
+            name: Tuna
+        bread:
+          value:
+            name: Bread
+      schema:
+        $ref: "../index.yaml#/components/schemas/ItemData"
+  required: true
+responses:
+  "201":
+    content:
+      application/json:
+        schema:
+          $ref: "../index.yaml#/components/schemas/Item"
+    description: Created.
+    headers:
+      Location:
+        description: URI of new item.
+        explode: false
+        required: true
+        schema:
+          minLength: 1
+          nullable: false
+          type: string
+        style: simple
+  "400":
+    $ref: "../index.yaml#/components/responses/BadRequest"
+  "500":
+    $ref: "../index.yaml#/components/responses/ServerError"

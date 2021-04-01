@@ -1,0 +1,10 @@
+example: { "name": "Canned tuna", "_id": "0123456789aBcDeF01234567" }
+properties:
+  _id:
+    $ref: "../index.yaml#/components/schemas/MongoId"
+  name:
+    $ref: "../index.yaml#/components/schemas/ItemName"
+required:
+  - _id
+  - name
+type: object

@@ -1,0 +1,4 @@
+type: array
+nullable: false
+items:
+  $ref: "../index.yaml#/components/schemas/Item"

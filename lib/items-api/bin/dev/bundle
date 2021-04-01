@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+cd "${SCRIPT_DIR}/../.."
+
+lib/swagger-cli/bin/usr/swagger-cli bundle src/index.yaml -t yaml "${@}"
