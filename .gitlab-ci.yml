@@ -15,6 +15,7 @@ build:
   stage: build
   before_script:
     - apk add docker-compose
+    - apk add bash
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - env/dev/bin/build
