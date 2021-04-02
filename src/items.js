@@ -62,6 +62,33 @@ class Items {
       };
     }
   }
+
+  static async update(itemData) {
+    try {
+      const itemsCollection = await getItemsCollection();
+      const result = await itemsCollection.updateOne(
+        { _id: ObjectID(itemData._id) },
+        {$set: {name: itemData.name}},
+        {upsert: false}
+      );
+      if (result.modifiedCount < 1) {
+        return null;
+      } else {
+        const item = await itemsCollection.findOne(
+          {_id: ObjectID(itemData._id)}
+        );
+        item._id = item._id.toHexString();
+        return itemData;
+      }
+    } catch (e) {
+      logger.error("ItemsAccessObject.update", e);
+      throw {
+        code: 500,
+        error: "Internal Server Error",
+        caused_by: e
+      };
+    }
+  }
 }
 
 async function getItemsCollection() {
