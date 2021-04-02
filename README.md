@@ -43,7 +43,8 @@ rm -rf ./backend-database
 
 ## 4. Environment Variables
 
-* HOST_BASE_URL - The URL used to access the service from outside the Docker environment.
+* HOST_BASE_URL - Deprecated. Use BASE_URL.
+* BASE_URL - The URL used to access the service from outside the Docker environment.
 * MONGO_URI - The MongoDB connection string.
 
 ## 5. Development
