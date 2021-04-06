@@ -1,10 +1,10 @@
 const bodyParser = require('body-parser');
-const {SERVER_PORT, OPENAPI_FILE, ENDPOINTS_DIR} = require('./config.js');
+const {SERVER_PORT, OPENAPI_FILE, ENDPOINTS_DIR} = require('./lib/config.js');
 const cors = require('cors');
 const express = require('express');
 const fs = require('fs');
 const http = require('http');
-const logger = require('./logger.js');
+const logger = require('./lib/logger.js');
 const OpenApiValidator = require('express-openapi-validator');
 const path = require('path');
 

@@ -3,8 +3,8 @@
  * Mongo database. In architecture parlance, it is a Data Access Object.
  * It abstracts away the details of interact with the database.
  */
-const Database = require("./core/database.js");
-const logger = require("./core/logger.js");
+const Database = require("../lib/database.js");
+const logger = require("../lib/logger.js");
 const { ObjectID } = require("mongodb");
 
 

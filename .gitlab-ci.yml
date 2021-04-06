@@ -19,7 +19,7 @@ before_script:
 build:
   stage: build
   script:
-    - env/dev/bin/build
+    - bin/build-backend-server
     - docker tag backend-server:dev $CONTAINER_TEST_IMAGE
     - docker push $CONTAINER_TEST_IMAGE
 
@@ -28,10 +28,8 @@ test:
   script:
     - docker pull $CONTAINER_TEST_IMAGE
     - docker tag $CONTAINER_TEST_IMAGE backend-server:dev
-    - env/test/bin/build
-    - env/test/bin/up
-    - env/test/bin/run
-    - env/test/bin/down
+    - bin/test
+    - bin/down
 
 release:
   stage: release

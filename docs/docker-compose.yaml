@@ -1,9 +1,9 @@
-version: "3.3"
+version: "3.8"
 services:
+
   backend-server:
-    image: backend-server:dev
-    build: ../..
-    # init: true
+    image: registry.gitlab.com/librefoodpantry/training/spikeathons/winter-2021/stoney-manage-items/backend:latest
+    init: true
     ports:
       - 10001:3000
     environment:
@@ -18,6 +18,10 @@ services:
     image: mongo:4
     networks:
       - backend-network
+    volumes:
+      - type: bind
+        source: ./backend-database
+        target: /data/db
 
 networks:
   backend-network:

@@ -1,4 +1,4 @@
-const Items = require("../items.js");
+const Items = require("../data/items.js");
 
 module.exports = function (app) {
   app.post('/items', async function(request, response) {

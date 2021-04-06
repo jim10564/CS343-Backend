@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+docker run -it --rm -v "$PWD:/w" -w /w node:14-alpine yarn "${@}"
