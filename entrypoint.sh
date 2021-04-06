@@ -16,5 +16,5 @@ fi
 if [ -n "${1}" ] ; then
     "${@}"
 else
-    node src/core/index.js
+    node src/index.js
 fi

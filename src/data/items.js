@@ -89,6 +89,24 @@ class Items {
       };
     }
   }
+
+  static async deleteOne(id) {
+    try {
+      const itemsCollection = await getItemsCollection();
+      const result = await itemsCollection.deleteOne(
+        { _id: ObjectID(id) }
+      );
+      return result.deletedCount >= 1;
+    } catch (e) {
+      logger.error("ItemsAccessObject.update", e);
+      throw {
+        code: 500,
+        error: "Internal Server Error",
+        caused_by: e
+      };
+    }
+  }
+
 }
 
 async function getItemsCollection() {

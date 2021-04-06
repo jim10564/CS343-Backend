@@ -22,5 +22,9 @@ module.exports = {
 
     async updateItem(item) {
         return axios.put("/items/" + item._id, item);
-    }
+    },
+
+    async deleteItem(id) {
+        return axios.delete("/items/" + id);
+    },
 };

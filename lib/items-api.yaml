@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: ManageItems
-  version: 0.2.0
+  version: 0.2.1
 paths:
   /items:
     get:
@@ -120,12 +120,8 @@ paths:
           schema:
             $ref: '#/components/schemas/MongoId'
       responses:
-        '200':
-          description: Item updated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Item'
+        '204':
+          description: Item deleted
         '400':
           $ref: '#/components/responses/BadRequest'
         '404':
@@ -223,4 +219,3 @@ components:
       nullable: false
       pattern: '^[a-zA-Z0-9]+$'
       type: string
-

@@ -25,7 +25,7 @@
 
 const MongoClient = require("mongodb").MongoClient;
 
-const config = require("../core/config.js");
+const config = require("../lib/config.js");
 
 
 class Database {
