@@ -1,6 +1,7 @@
-# Create /openapi.test.yaml file that has a "servers:" section.
-# Needed by api-contract-validator Chai plugin.
-cp /openapi.yaml /openapi.test.yaml
-echo "servers:" >> /openapi.test.yaml
-echo "  - url: $SUT_BASE_URL" >> /openapi.test.yaml
+#!/usr/bin/env sh
+
+cp -R /app/lib/items-api.yaml /tmp/items-api.yaml
+echo "servers:" >> /tmp/items-api.yaml
+echo "  - url: '${SUT_BASE_URL}'" >> /tmp/items-api.yaml
+
 node ./node_modules/mocha/bin/mocha -C

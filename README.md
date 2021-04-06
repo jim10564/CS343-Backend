@@ -1,89 +1,72 @@
 # Manage Items Backend REST API Server
 
-> IMPORTANT: This project is not intended for production environments.
-> It was built as an educational exercise and is intended to serve as an educational
-> example.
+## 1. Meta Purpose
 
-Provides a backend REST API server for managing items in a larger inventory system.
+This project is an example of how to build a REST API server
+using OpenAPI, ExpressJS + NodeJS, and Chai + Mocha, Docker + Docker Compose,
+and GitLab + CI.
 
-src/openapi.yaml contains the specification for the Manage Items API.
+## 2. Purpose
 
-## 1. Use
+Provide a REST API server for managing items.
 
-Download and inspect/configure `docker-compose.yaml`.
+## 3. OpenAPI Specification of the API
 
-Make database directory. By default `./backend-database`.
+`lib/items-api.yaml` contains the OpenAPI specification of the API it
+implements. This file should not be modified directly. The specification
+is maintained by a separate API project (which should be next to this
+project in the repository hosting service (e.g., GitLab)).
 
-```bash
-mkdir backend-database
-```
+## 4. Use
 
-Start.
+1. Download, inspect, and configure `docs/docker-compose.yaml`.
+2. Make database directory named `./backend-database/`.
+   You can use a different name by configuring it in `docker-compose.yaml`.
+    ```bash
+    mkdir backend-database
+    ```
+2. Start the server.
+    ```bash
+    docker-compose up --detach
+    ```
+3. The service is now available at `http://localhost:10001/v0/items`.
+   You can configure the base url in `docker-compose.yaml`.
+   See `lib/items-api.yaml` to learn what endpoints are available.
+4. Stop the server.
+    ```bash
+    docker-compose down
+    ```
+5. To reset the database, delete the contents of `./backend-database`
+    ```bash
+    rm -rf ./backend-database
+    ```
 
-```bash
-docker-compose up --detach
-```
+## 5. Environment Variables
 
-By default the service is now available at `http://localhost:10001/v0/items`
-
-
-See src/openapi.yaml to learn what endpoints are available.
-
-Stop.
-
-```bash
-docker-compose down
-```
-
-To reset the database, delete the contents of `./backend-database`
-
-```bash
-rm -rf ./backend-database
-```
-
-## 4. Environment Variables
-
-* HOST_BASE_URL - The URL used to access the service from outside the Docker environment.
+* HOST_BASE_URL - Deprecated. Use BASE_URL.
+* BASE_URL - The URL used to access the service from outside the Docker environment.
 * MONGO_URI - The MongoDB connection string.
 
-## 5. Development
+## 6. Development
 
-Build the backend-server.
-
-```bash
-# ci/build
-docker-compose -f docker-compose.yaml -f docker-compose.build.yaml build --pull backend-server
-```
-
-Build the test-runner.
+Build, run, and test.
 
 ```bash
-# ci/build-test
-docker-compose -f docker-compose.dev.yaml build --pull test-runner
+bin/test
 ```
 
-Run the backend-server and its database.
+The backend-server and its database will still be running. To shut them down...
 
 ```bash
-# ci/up
-docker-compose -f docker-compose.dev.yaml up --detach backend-server
+bin/down
 ```
 
-Test the running backend-server.
+There are several other scripts in `bin/` for common operations during
+development. All of these are simple wrappers for `docker-compose` commands.
+If you don't have Bash or would prefer to interact with `docker-compose`
+directly, inspect these files.
 
-```bash
-# ci/test
-docker-compose -f docker-compose.dev.yaml run --rm test-runner
-```
-
-Stop the backend-server and its database.
-
-```bash
-# ci/down
-docker-compose -f docker-compose.dev.yaml down
-```
-
-### 5.1. Dependencies
+### 6.2. Dependencies
 
 Dependencies are managed in a few different files.
 
@@ -104,9 +87,3 @@ For example, to check if there are any outdated packages in test-runner...
 cd testing/test-runner
 docker run -it --rm -v "$PWD:/w" -w /w node:14-alpine yarn outdated
 ```
-
-### 5.2. Configuration
-
-* `docker-compose.yaml` - Configures the test/development environment.
-* `src/openapi.yaml` - Contains the OpenAPI specification of the REST API. It contains metadata related to the API including a version number.
-* `src/config.js` - Contains configuration specific to the implementation of the backend.

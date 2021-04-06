@@ -1,6 +1,6 @@
 FROM node:14-alpine
 WORKDIR /app
-COPY ./package.json ./yarn.lock /app/
+COPY ./package.json ./yarn.lock ./
 RUN yarn install
-COPY . /app/
-ENTRYPOINT [ "sh", "entrypoint.sh" ]
+COPY ./entrypoint.sh .
+ENTRYPOINT [ "/app/entrypoint.sh" ]

@@ -3,8 +3,8 @@
  * Mongo database. In architecture parlance, it is a Data Access Object.
  * It abstracts away the details of interact with the database.
  */
-const Database = require("./database");
-const logger = require("./logger");
+const Database = require("../lib/database.js");
+const logger = require("../lib/logger.js");
 const { ObjectID } = require("mongodb");
 
 
@@ -62,6 +62,51 @@ class Items {
       };
     }
   }
+
+  static async update(itemData) {
+    try {
+      const itemsCollection = await getItemsCollection();
+      const result = await itemsCollection.updateOne(
+        { _id: ObjectID(itemData._id) },
+        {$set: {name: itemData.name}},
+        {upsert: false}
+      );
+      if (result.modifiedCount < 1) {
+        return null;
+      } else {
+        const item = await itemsCollection.findOne(
+          {_id: ObjectID(itemData._id)}
+        );
+        item._id = item._id.toHexString();
+        return itemData;
+      }
+    } catch (e) {
+      logger.error("ItemsAccessObject.update", e);
+      throw {
+        code: 500,
+        error: "Internal Server Error",
+        caused_by: e
+      };
+    }
+  }
+
+  static async deleteOne(id) {
+    try {
+      const itemsCollection = await getItemsCollection();
+      const result = await itemsCollection.deleteOne(
+        { _id: ObjectID(id) }
+      );
+      return result.deletedCount >= 1;
+    } catch (e) {
+      logger.error("ItemsAccessObject.update", e);
+      throw {
+        code: 500,
+        error: "Internal Server Error",
+        caused_by: e
+      };
+    }
+  }
+
 }
 
 async function getItemsCollection() {
