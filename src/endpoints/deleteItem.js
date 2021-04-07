@@ -1,7 +1,9 @@
 const Items = require("../data/items.js");
 
-module.exports = function (app) {
-  app.delete('/items/:id', async function(request, response) {
+module.exports = {
+  method: 'delete',
+  path: '/items/:id',
+  async handler(request, response) {
     const id = request.params.id;
     const item = await Items.getOne(id);
     const isDeleteSuccessful = await Items.deleteOne(id);
@@ -14,5 +16,5 @@ module.exports = function (app) {
         message: "ID does not exist"
       });
     }
-  });
-}
+  }
+};

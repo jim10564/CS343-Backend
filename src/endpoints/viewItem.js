@@ -1,7 +1,9 @@
 const Items = require("../data/items.js");
 
-module.exports = function (app) {
-  app.get('/items/:id', async function(request, response) {
+module.exports = {
+  method: 'get',
+  path: '/items/:id',
+  async handler(request, response) {
     const id = request.params.id;
     const item = await Items.getOne(id);
     if (item !== null) {
@@ -13,5 +15,5 @@ module.exports = function (app) {
         message: "ID does not exist"
       })
     }
-  });
-}
+  }
+};

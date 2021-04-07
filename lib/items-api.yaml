@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: ManageItems
-  version: 0.2.1
+  version: 0.2.2
 paths:
   /items:
     get:
@@ -53,14 +53,14 @@ paths:
         '500':
           $ref: '#/components/responses/ServerError'
   '/items/{id}':
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/MongoId'
     get:
       description: View item
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/MongoId'
       responses:
         '200':
           description: Item found and returned
@@ -76,12 +76,6 @@ paths:
           $ref: '#/components/responses/ServerError'
     put:
       description: Update item
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/MongoId'
       requestBody:
         required: true
         content:
@@ -113,12 +107,6 @@ paths:
           $ref: '#/components/responses/ServerError'
     delete:
       description: Delete item
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/MongoId'
       responses:
         '204':
           description: Item deleted
@@ -219,3 +207,4 @@ components:
       nullable: false
       pattern: '^[a-zA-Z0-9]+$'
       type: string
+
