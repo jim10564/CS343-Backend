@@ -1,7 +1,9 @@
 const Items = require("../data/items.js");
 
-module.exports = function (app) {
-  app.put('/items/:id', async function(request, response) {
+module.exports = {
+  method: 'put',
+  path: '/items/:id',
+  async handler(request, response) {
     let id = request.params.id;
     let data = request.body;
     data._id = id;
@@ -15,5 +17,5 @@ module.exports = function (app) {
         message: "ID does not exist"
       })
     }
-  });
-}
+  }
+};

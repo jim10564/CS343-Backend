@@ -1,6 +1,6 @@
 const chai = require('./lib/chai.js');
 const expect = chai.expect;
-const {createItem, updateItem} = require('./lib/api.js');
+const { createItem, updateItem } = require('./lib/api.js');
 
 describe("updateItem (PUT /items/{id})", function () {
     context("ID exists", function () {
