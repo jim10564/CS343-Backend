@@ -1,4 +1,6 @@
-GET http://localhost:10001/items
+@baseURL = http://localhost:10001/items
+
+GET {{baseURL}}
 ###
 POST http://localhost:10001/items HTTP/1.1
 content-type: application/json
@@ -6,3 +8,14 @@ content-type: application/json
 {
     "name": "Cereal"
 }
+
+###
+POST http://localhost:10001/items HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Soup"
+}
+
+###
+DELETE {{baseURL}}/617ad31ae6b94b0007e2bc9e
