@@ -17,8 +17,8 @@
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"dbaeumer.vscode-eslint",
-		"rangav.vscode-thunder-client",
-		"arjun.swagger-viewer"
+		"arjun.swagger-viewer",
+		"humao.rest-client"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
