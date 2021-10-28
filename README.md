@@ -47,7 +47,7 @@ project in the repository hosting service (e.g., GitLab)).
     ```bash
     docker-compose up --detach
     ```
-3. The service is now available at `http://localhost:10001/v0/items`.
+3. The service is now available at `http://localhost:10001/items`.
    You can configure the base url in `docker-compose.yaml`.
    See `lib/items-api.yaml` to learn what endpoints are available.
 4. Stop the server.
