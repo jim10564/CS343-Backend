@@ -47,7 +47,7 @@ project in the repository hosting service (e.g., GitLab)).
     ```bash
     docker-compose up --detach
     ```
-3. The service is now available at `http://localhost:10001/v0/items`.
+3. The service is now available at `http://localhost:10001/items`.
    You can configure the base url in `docker-compose.yaml`.
    See `lib/items-api.yaml` to learn what endpoints are available.
 4. Stop the server.
@@ -94,14 +94,3 @@ Dependencies are managed in a few different files.
 * testing/test-runner/package.json - 3rd party JavaScript libraries for test-runner.
 
 Use [yarn](https://yarnpkg.com/) to manage dependencies package.json. You can run yarn using the nodejs docker image.
-
-```bash
-docker run -it --rm -v "$PWD:/w" -w /w node:14-alpine yarn
-```
-
-For example, to check if there are any outdated packages in test-runner...
-
-```bash
-cd testing/test-runner
-docker run -it --rm -v "$PWD:/w" -w /w node:14-alpine yarn outdated
-```
