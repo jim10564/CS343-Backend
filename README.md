@@ -10,14 +10,32 @@ and GitLab + CI.
 
 Provide a REST API server for managing items.
 
-## 3. OpenAPI Specification of the API
+## 3. Install development environment
+
+To avoid dependency conflicts across projects, and to reduce variance
+between development platforms, we use VS Code devcontainers.
+
+New to VS Code devcontainers? Start here
+https://code.visualstudio.com/docs/remote/containers 
+and follow its installation instructions. Be sure to install and
+configure Git too.
+
+Now download, install, and run this project and its devcontainer as
+follows.
+
+1. Navigate to this project on GitLab and select
+    `Clone -> Open in your IDE -> Visual Studio Code (HTTPS)`.
+2. Select location to store the project.
+3. Select "Reopen in container" when option is provided.
+
+## 4. OpenAPI Specification of the API
 
 `lib/items-api.yaml` contains the OpenAPI specification of the API it
 implements. This file should not be modified directly. The specification
 is maintained by a separate API project (which should be next to this
 project in the repository hosting service (e.g., GitLab)).
 
-## 4. Use
+## 5. If you want to use this code in production
 
 1. Download, inspect, and configure `docs/docker-compose.yaml`.
 2. Make database directory named `./backend-database/`.
@@ -41,13 +59,13 @@ project in the repository hosting service (e.g., GitLab)).
     rm -rf ./backend-database
     ```
 
-## 5. Environment Variables
+## 6. Environment Variables
 
 * HOST_BASE_URL - Deprecated. Use BASE_URL.
 * BASE_URL - The URL used to access the service from outside the Docker environment.
 * MONGO_URI - The MongoDB connection string.
 
-## 6. Development
+## 7. If you want to develop with this code
 
 Build, run, and test.
 
@@ -66,7 +84,7 @@ development. All of these are simple wrappers for `docker-compose` commands.
 If you don't have Bash or would prefer to interact with `docker-compose`
 directly, inspect these files.
 
-### 6.2. Dependencies
+### 7.2. Dependencies
 
 Dependencies are managed in a few different files.
 
