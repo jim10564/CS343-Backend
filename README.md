@@ -94,14 +94,3 @@ Dependencies are managed in a few different files.
 * testing/test-runner/package.json - 3rd party JavaScript libraries for test-runner.
 
 Use [yarn](https://yarnpkg.com/) to manage dependencies package.json. You can run yarn using the nodejs docker image.
-
-```bash
-docker run -it --rm -v "$PWD:/w" -w /w node:14-alpine yarn
-```
-
-For example, to check if there are any outdated packages in test-runner...
-
-```bash
-cd testing/test-runner
-docker run -it --rm -v "$PWD:/w" -w /w node:14-alpine yarn outdated
-```
