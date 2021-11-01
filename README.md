@@ -67,6 +67,13 @@ project in the repository hosting service (e.g., GitLab)).
 
 ## 7. If you want to develop with this code
 
+To run the system:
+
+```bash
+bin/down
+bin/up
+```
+
 Build, run, and test.
 
 ```bash
