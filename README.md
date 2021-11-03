@@ -70,20 +70,20 @@ project in the repository hosting service (e.g., GitLab)).
 To run the system:
 
 ```bash
-bin/down
-bin/up
+bin/down.sh
+bin/up.sh
 ```
 
 Build, run, and test.
 
 ```bash
-bin/test
+bin/test.sh
 ```
 
 The backend-server and its database will still be running. To shut them down...
 
 ```bash
-bin/down
+bin/down.sh
 ```
 
 There are several other scripts in `bin/` for common operations during
