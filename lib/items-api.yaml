@@ -21,6 +21,23 @@
           }
         }
       },
+       "put": {
+        "description": "List items",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ItemArray"
+                }
+              }
+            }
+          }
+        }
+      },
+
+       
       "post": {
         "description": "Create item",
         "requestBody": {
@@ -82,7 +99,10 @@
           }
         }
       }
+
     },
+
+    
     "/items/{id}": {
       "parameters": [
         {
@@ -282,6 +302,7 @@
         ],
         "type": "object"
       },
+    
       "ItemArray": {
         "type": "array",
         "nullable": false,
