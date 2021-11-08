@@ -2,6 +2,6 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 cd "${SCRIPT_DIR}/.."
 
-bin/build
-bin/down
-bin/test
+bin/build.sh
+bin/down.sh
+bin/test.sh
