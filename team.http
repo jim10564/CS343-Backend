@@ -4,5 +4,9 @@ POST http://localhost:10001/items HTTP/1.1
 content-type: application/json
 
 {
-    "name": "Frjita"
+    "name" : "Buritto"
 }
+###
+GET http://localhost:10001/items/618996169c2257000712889b
+###
+DELETE  http://localhost:10001/items/618996169c2257000712889b
