@@ -1,12 +1,12 @@
-GET http://localhost:10001/items
+GET http://localhost:10001/orders
 ###
 POST http://localhost:10001/items HTTP/1.1
 content-type: application/json
 
 {
-    "name" : "Buritto"
+    "name" : "Burrito"
 }
 ###
-GET http://localhost:10001/items/618996169c2257000712889b
+GET http://localhost:10001/items/619c0861cad5b80007ef60d2
 ###
 DELETE  http://localhost:10001/items/618996169c2257000712889b

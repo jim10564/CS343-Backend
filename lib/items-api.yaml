@@ -1,11 +1,18 @@
 openapi: 3.0.3
 info:
   title: ManageItems
-  version: 0.2.3
+  version: 0.4.0
 paths:
   /items:
     get:
       description: List items
+      parameters:
+        - in: query
+          name: name
+          schema:
+            $ref: '#/components/schemas/ItemName'
+          required: false
+          description: Find items matching name.
       responses:
         '200':
           description: OK
@@ -13,6 +20,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ItemArray'
+        '404':
+          $ref: '#/components/responses/NotFound'
     post:
       description: Create item
       requestBody:
@@ -116,6 +125,78 @@ paths:
           $ref: '#/components/responses/NotFound'
         '500':
           $ref: '#/components/responses/ServerError'
+  /orders:
+    get:
+      description: List orders
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderArray'
+    post:
+      description: Create Order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderData'
+        required: true
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+          description: Created.
+          headers:
+            Location:
+              description: URI of new order.
+              explode: false
+              required: true
+              schema:
+                minLength: 1
+                nullable: false
+                type: string
+              style: simple
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/ServerError'
+  '/orders/{id}':
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/MongoId'
+    get:
+      description: View order
+      responses:
+        '200':
+          description: Order found and returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      description: Delete order
+      responses:
+        '204':
+          description: Order deleted
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/ServerError'
 components:
   responses:
     BadRequest:
@@ -206,4 +287,79 @@ components:
       minLength: 24
       nullable: false
       pattern: '^[a-zA-Z0-9]+$'
+      type: string
+    OrderArray:
+      type: array
+      nullable: false
+      items:
+        $ref: '#/components/schemas/Order'
+    Order:
+      example:
+        _id: 0123456789aBcDeF01234567
+        preferences: 'Pineapple, Froot Loops'
+        restrictions: Peanut allergy
+        items:
+          - _id: 0123456789aBcDeF01234567
+            name: Pasta
+        email: tbeck@college.edu
+      properties:
+        _id:
+          $ref: '#/components/schemas/MongoId'
+        preferences:
+          $ref: '#/components/schemas/Preferences'
+        restrictions:
+          $ref: '#/components/schemas/Restrictions'
+        items:
+          $ref: '#/components/schemas/ItemArray'
+        email:
+          $ref: '#/components/schemas/Email'
+      required:
+        - _id
+        - items
+        - email
+      type: object
+    OrderData:
+      example:
+        preferences: 'Pineapple, Froot Loops'
+        restrictions: Peanut allergy
+        items:
+          - _id: 0123456789aBcDeF01234567
+            name: Pasta
+        email: tbeck@college.edu
+      properties:
+        preferences:
+          $ref: '#/components/schemas/Preferences'
+        restrictions:
+          $ref: '#/components/schemas/Restrictions'
+        items:
+          $ref: '#/components/schemas/ItemArray'
+        email:
+          $ref: '#/components/schemas/Email'
+      required:
+        - items
+        - email
+      type: object
+    Preferences:
+      description: Food preferences.
+      example: 'Pineapple, Froot Loops'
+      maxLength: 128
+      minLength: 1
+      nullable: false
+      pattern: \S+
+      type: string
+    Restrictions:
+      description: Food restriction.
+      example: Peanut Allergy
+      maxLength: 128
+      minLength: 1
+      nullable: false
+      pattern: \S+
+      type: string
+    Email:
+      description: Email address
+      example: tbeck@college.edu
+      maxLength: 128
+      minLength: 5
+      nullable: false
+      pattern: '^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$'
       type: string
