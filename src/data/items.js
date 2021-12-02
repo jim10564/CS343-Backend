@@ -17,7 +17,15 @@ class Items {
     });
     return items;
   }
-
+  static async getItemsByName(name) {
+    const itemsCollection = await getItemsCollection();
+    const items_cursor = itemsCollection.find({name:name});
+    let items = await items_cursor.toArray();
+    items.forEach(item => {
+      item._id = item._id.toHexString();
+    });
+    return items;
+  }
   static async getOne(id) {
     const itemsCollection = await getItemsCollection();
     let item = await itemsCollection.findOne({ _id: ObjectID(id) });
