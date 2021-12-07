@@ -1,12 +1,37 @@
-GET http://localhost:10001/orders
+GET http://localhost:10001/orders?email=tBeck%40college.edu
+
+###
+POST http://localhost:10001/orders HTTP/1.1
+content-type: application/json 
+
+{
+    "preferences": "Pineapple, Froot Loops",
+    "restrictions": "Peanut allergy", 
+    "items": [
+          {
+              "_id": "0123456789aBcDeF01234567",
+              "name" : "pasta"
+          }
+      ],
+      "email": "jim@college.edu"
+
+}
 ###
 POST http://localhost:10001/items HTTP/1.1
 content-type: application/json
 
 {
-    "name" : "Burrito"
+    "name" : "Dog food"
 }
 ###
 GET http://localhost:10001/items/619c0861cad5b80007ef60d2
 ###
 DELETE  http://localhost:10001/items/618996169c2257000712889b
+
+###
+GET http://localhost:10001/items?name=Ham
+# content-type: application/json
+
+# {
+#     "name" : "Ham"
+# }

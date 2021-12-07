@@ -1,0 +1,38 @@
+POST http://localhost:10001/orders HTTP/1.1
+content-type: application/json 
+
+{
+    "preferences": "Pineapple, Froot Loops",
+    "restrictions": "Peanut allergy", 
+    "items": [
+          {
+              "_id": "0123456789aBcDeF01234567",
+              "name" : "pasta"
+          }
+      ],
+      "email": "jim@college.edu"
+
+}
+
+###
+POST http://localhost:10001/orders HTTP/1.1
+content-type: application/json 
+
+{
+    "preferences": "French Fries",
+    "restrictions": "Vegan", 
+    "items": [
+          {
+              "_id": "0123456789aBcDeF01233333",
+              "name" : "Oranges"
+          }
+      ],
+      "email": "todd@college.edu"
+
+}
+
+###
+GET http://localhost:10001/orders?email=jim%40college.edu
+
+###
+GET http://localhost:10001/orders?email=todd%40college.edu
