@@ -29,7 +29,6 @@ async function buildApp() {
   mountEndpoints(app);
 
   app.use((err, req, res, next) => {
-    console.log("WE ARE HERE");
     if (res.headersSent) {
       return next(err);
     }
